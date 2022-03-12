@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-// Class objects are created only when necessary while traversing the data: lazy approach
 class UniudTimetableAPI {
   // API Endpoints
   final _degreesIndexEndpoint = Uri.parse('https://planner.uniud.it/PortaleStudenti/api_profilo_aa_scuola_tipo_cdl_pd.php');
@@ -15,6 +14,8 @@ class UniudTimetableAPI {
   /// Gets the raw Degrees Index in JSON format from the Uniud REST API.
   /// The hiearchy of the data inside the returned JSON will be:
   /// Department -> Type of Degree -> Degree -> Period
+  /// Class objects will be instantiated only when necessary during the
+  /// traversing of the data hierarchy: lazy approach.
   Future<DegreesRawIndex> getDegreesRawIndex() async {
     var response = await http.get(_degreesIndexEndpoint);
 

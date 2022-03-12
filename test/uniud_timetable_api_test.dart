@@ -2,7 +2,6 @@ import 'package:test/test.dart';
 import 'package:uniud_timetable_app/uniud_timetable_api.dart';
 
 void main() {
-  // To test: pick "Laurea Magistrale, informatica, big data analytics, secondo semestre"
   test('Test the API with a specific call.', () async {
 
     final api = UniudTimetableAPI();
