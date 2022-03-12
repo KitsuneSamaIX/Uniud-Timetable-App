@@ -2,8 +2,9 @@ import 'package:test/test.dart';
 import 'package:uniud_timetable_app/uniud_timetable_api.dart';
 
 void main() {
-  test('Test the API with a specific call.', () async {
+  Map<String, dynamic> rememberSelection = {};
 
+  test("Retrieve the degrees index from Uniud's API.", () async {
     final api = UniudTimetableAPI();
 
     var degreesRawIndex = await api.getDegreesRawIndex();
@@ -33,6 +34,8 @@ void main() {
 
                 for (final period in periods) {
                   print(period.name);
+                  rememberSelection['degree'] = degree;
+                  rememberSelection['period'] = period;
                 }
                 break;
               }
@@ -43,6 +46,34 @@ void main() {
         break;
       }
     }
+  });
 
+  test("Retrieve a degree course from Uniud's API.", () async {
+    final api = UniudTimetableAPI();
+
+    var courseDescriptors =
+      await api.getCourseDescriptors(
+        rememberSelection['degree'] as Degree,
+        rememberSelection['period'] as Period
+      );
+
+    print('\n\n');
+    for (final element in courseDescriptors) {
+      print(element.name);
+      if (element.name == 'ANALISI MATEMATICA') {
+        rememberSelection['courseDescriptor'] = element;
+      }
+    }
+  });
+
+  test("Retrieve a course info from Uniud's API.", () async {
+    final api = UniudTimetableAPI();
+
+    var course =
+      await api.getCourse(
+        rememberSelection['courseDescriptor'] as CourseDescriptor
+      );
+
+    print(course.name);
   });
 }

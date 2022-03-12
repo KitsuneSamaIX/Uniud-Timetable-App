@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:xml/xml.dart';
 
 class UniudTimetableAPI {
   // API Endpoints
@@ -100,6 +101,61 @@ class UniudTimetableAPI {
       return [];
     }
   }
+
+  Future<List<CourseDescriptor>> getCourseDescriptors(Degree degree, Period period) async {
+    final enpoint = Uri.https(
+        _degreeCoursesEndpoint.authority,
+        _degreeCoursesEndpoint.path,
+        {
+          'cdl': degree.id,
+          'periodo_didattico': period.id
+        }
+    );
+
+    var response = await http.get(enpoint);
+
+    if (response.statusCode == 200) {
+      try {
+        List<CourseDescriptor> courseDescriptors = [];
+        for (final courseDescriptor in jsonDecode(response.body) as List<dynamic>) {
+          courseDescriptors.add(
+              CourseDescriptor(
+                  courseDescriptor['nome'] as String,
+                  courseDescriptor['crediti'] as String,
+                  courseDescriptor['file'] as String
+              )
+          );
+        }
+        return courseDescriptors;
+      } catch(e) {
+        print(e);
+        return [];
+      }
+
+    } else {
+      throw Exception("A problem occurred while downloading the degree's courses.");
+    }
+  }
+
+  Future<Course> getCourse(CourseDescriptor courseDescriptor) async {
+    final enpoint = Uri.https(
+        _courseInfoEndpoint.authority,
+        _courseInfoEndpoint.path,
+        {
+          'file': courseDescriptor.fileId
+        }
+    );
+
+    var response = await http.get(enpoint);
+
+    if (response.statusCode == 200) {
+      // TODO parse the xml returned by this response, it contains all the course's data
+      // TODO XML library is already download, you it to parse
+      return ; // TODO return the result
+    } else {
+      throw Exception("A problem occurred while downloading the course's info.");
+    }
+  }
 }
 
 class Profile {
@@ -153,10 +209,9 @@ class Period {
 class CourseDescriptor {
   final String name;
   final String credits;
-  final String degreeId;
-  final String periodId;
+  final String fileId;
 
-  CourseDescriptor(this.name, this.credits, this.degreeId, this.periodId);
+  CourseDescriptor(this.name, this.credits, this.fileId);
 }
 
 class Course {
