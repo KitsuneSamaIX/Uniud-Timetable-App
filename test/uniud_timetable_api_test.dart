@@ -1,5 +1,6 @@
 import 'package:test/test.dart';
 import 'package:uniud_timetable_app/uniud_timetable_api.dart';
+import 'package:xml/xml.dart';
 
 void main() {
   Map<String, dynamic> rememberSelection = {};
@@ -71,9 +72,15 @@ void main() {
 
     var course =
       await api.getCourse(
+        // CourseDescriptor(
+        //     'Name placeholder',
+        //     '0',
+        //     '2021/PS_MA07139_766_1_S2.xml'
+        // )
         rememberSelection['courseDescriptor'] as CourseDescriptor
       );
 
+    print('\n\n\n');
     print(course.name);
   });
 }
