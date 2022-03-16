@@ -202,7 +202,7 @@ class UniudTimetableAPI {
         courseProfessor.email = docProfessor.getAttribute('Mail1');
         courseProfessor.phone = docProfessor.getAttribute('Fisso');
 
-        // Build the Course object
+        // Build and return the Course object
         return Course(
             docCourse.getAttribute('Nome')!,
             docCourse.getAttribute('Crediti')!,
@@ -210,9 +210,7 @@ class UniudTimetableAPI {
             courseLessons
         );
       } catch(e) {
-        print(e);
-        rethrow;
-        // throw Exception("A problem occurred while parsing the course's xml data.");
+        throw Exception("A problem occurred while parsing the course's xml data. ($e)");
       }
       
     } else {
