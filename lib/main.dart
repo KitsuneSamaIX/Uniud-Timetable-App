@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.red,
+        primarySwatch: Colors.blue,
       ),
       home: const HomePage(),
     );
@@ -56,8 +56,7 @@ class DepartmentSelectionPage extends StatefulWidget {
   const DepartmentSelectionPage({Key? key}) : super(key: key);
 
   @override
-  State<DepartmentSelectionPage> createState() =>
-      _DepartmentSelectionPageState();
+  State<DepartmentSelectionPage> createState() => _DepartmentSelectionPageState();
 }
 
 class _DepartmentSelectionPageState extends State<DepartmentSelectionPage> {
@@ -79,12 +78,16 @@ class _DepartmentSelectionPageState extends State<DepartmentSelectionPage> {
                 itemBuilder: (context, index) {
                   return ListTile(
                     title: Text(deparments[index].name),
-                    // onTap: , TODO
+                    // onTap: ,
                   );
                 },
               );
             } else if (snapshot.hasError) {
-              return const Text("An error has occurred");
+              return const Center(
+                child: Text(
+                  'An error has occurred while loading data from UNIUD services.',
+                ),
+              );
             } else {
               return Center(
                 child: Column(
@@ -97,7 +100,9 @@ class _DepartmentSelectionPageState extends State<DepartmentSelectionPage> {
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: 16),
-                      child: Text('Loading...'),
+                      child: Text(
+                        'Loading data from UNIUD services...',
+                      ),
                     )
                   ],
                 ),
