@@ -34,9 +34,8 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: const Text("Homepage"),
       ),
-
       body: Center(
-        child: OutlinedButton (
+        child: OutlinedButton(
           child: const Text("Enter Selector"),
           onPressed: _pushDepartmentSelectionPage,
         ),
@@ -47,7 +46,7 @@ class _HomePageState extends State<HomePage> {
   void _pushDepartmentSelectionPage() {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-          builder: (context) => const DepartmentSelectionPage(),
+        builder: (context) => const DepartmentSelectionPage(),
       ),
     );
   }
@@ -57,7 +56,8 @@ class DepartmentSelectionPage extends StatefulWidget {
   const DepartmentSelectionPage({Key? key}) : super(key: key);
 
   @override
-  State<DepartmentSelectionPage> createState() => _DepartmentSelectionPageState();
+  State<DepartmentSelectionPage> createState() =>
+      _DepartmentSelectionPageState();
 }
 
 class _DepartmentSelectionPageState extends State<DepartmentSelectionPage> {
@@ -69,9 +69,11 @@ class _DepartmentSelectionPageState extends State<DepartmentSelectionPage> {
       ),
       body: FutureBuilder(
           future: UniudTimetableAPI.getDegreesRawIndex(),
-          builder: (BuildContext context, AsyncSnapshot<DegreesRawIndex> snapshot) {
+          builder:
+              (BuildContext context, AsyncSnapshot<DegreesRawIndex> snapshot) {
             if (snapshot.hasData) {
-              final deparments = UniudTimetableAPI.getDepartments(snapshot.data!);
+              final deparments =
+                  UniudTimetableAPI.getDepartments(snapshot.data!);
               return ListView.builder(
                 itemCount: deparments.length,
                 itemBuilder: (context, index) {
