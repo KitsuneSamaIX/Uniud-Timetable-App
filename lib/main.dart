@@ -33,10 +33,52 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Homepage"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: _pushSettingsPage,
+            tooltip: 'Settings',
+          ),
+        ],
+      ),
+      body: const Center(
+        child: Text(
+          "Hello Fellow Student!",
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _pushSettingsPage() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (context) => const SettingsPage(),
+      ),
+    );
+  }
+}
+
+class SettingsPage extends StatefulWidget {
+  const SettingsPage({Key? key}) : super(key: key);
+
+  @override
+  State<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Settings"),
       ),
       body: Center(
         child: OutlinedButton(
-          child: const Text("Enter Selector"),
+          child: const Text("Create Timetable"),
           onPressed: _pushDepartmentSelectionPage,
         ),
       ),
@@ -75,11 +117,15 @@ class _DepartmentSelectionPageState extends State<DepartmentSelectionPage> {
             if (snapshot.hasData) {
               final deparments =
                   UniudTimetableAPI.getDepartments(snapshot.data!);
-              return ListView.builder(
+              return ListView.separated(
                 itemCount: deparments.length,
+                separatorBuilder: (context, index) => const Divider(),
                 itemBuilder: (context, index) {
                   return ListTile(
-                    title: Text(deparments[index].name),
+                    title: Text(
+                      deparments[index].name,
+                      textAlign: TextAlign.center,
+                    ),
                     onTap: () => _pushDegreeTypeSelectionPage(deparments[index]),
                   );
                 },
@@ -168,11 +214,15 @@ class _DegreeTypeSelectionPageState extends State<DegreeTypeSelectionPage> {
       appBar: AppBar(
         title: const Text('Select your Degree Type'),
       ),
-      body: ListView.builder(
+      body: ListView.separated(
         itemCount: degreeTypes.length,
+        separatorBuilder: (context, index) => const Divider(),
         itemBuilder: (context, index) {
           return ListTile(
-            title: Text(degreeTypes[index].name),
+            title: Text(
+              degreeTypes[index].name,
+              textAlign: TextAlign.center,
+            ),
             onTap: () => _pushDegreeSelectionPage(degreeTypes[index]),
           );
         },
@@ -207,11 +257,15 @@ class _DegreeSelectionPageState extends State<DegreeSelectionPage> {
         appBar: AppBar(
           title: const Text('Select your Degree'),
         ),
-        body: ListView.builder(
+        body: ListView.separated(
           itemCount: degrees.length,
+          separatorBuilder: (context, index) => const Divider(),
           itemBuilder: (context, index) {
             return ListTile(
-              title: Text(degrees[index].name),
+              title: Text(
+                degrees[index].name,
+                textAlign: TextAlign.center,
+              ),
               onTap: () => _pushPeriodSelectionPage(degrees[index]),
             );
           },
@@ -246,11 +300,15 @@ class _PeriodSelectionPageState extends State<PeriodSelectionPage> {
         appBar: AppBar(
           title: const Text('Select the Period'),
         ),
-        body: ListView.builder(
+        body: ListView.separated(
           itemCount: periods.length,
+          separatorBuilder: (context, index) => const Divider(),
           itemBuilder: (context, index) {
             return ListTile(
-              title: Text(periods[index].name),
+              title: Text(
+                periods[index].name,
+                textAlign: TextAlign.center,
+              ),
               // onTap: () => , // TODO
             );
           },
@@ -258,3 +316,47 @@ class _PeriodSelectionPageState extends State<PeriodSelectionPage> {
     );
   }
 }
+
+
+
+// class GenericSelection<NamedItem> extends StatefulWidget {
+//   final DegreeType degreeType;
+//
+//   const GenericSelection({Key? key, required this.degreeType})
+//       : super(key: key);
+//
+//   @override
+//   State<DegreeSelectionPage> createState() => _DegreeSelectionPageState();
+// }
+//
+// class _DegreeSelectionPageState extends State<DegreeSelectionPage> {
+//   @override
+//   Widget build(BuildContext context) {
+//     final degrees = UniudTimetableAPI.getDegrees(widget.degreeType);
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text('Select your Degree'),
+//       ),
+//       body: ListView.builder(
+//         itemCount: degrees.length,
+//         itemBuilder: (context, index) {
+//           return ListTile(
+//             title: Text(
+//               degrees[index].name,
+//               textAlign: TextAlign.center,
+//             ),
+//             onTap: () => _pushPeriodSelectionPage(degrees[index]),
+//           );
+//         },
+//       ),
+//     );
+//   }
+//
+//   void _pushPeriodSelectionPage(Degree degree) {
+//     Navigator.of(context).push(
+//       MaterialPageRoute<void>(
+//         builder: (context) => PeriodSelectionPage(degree: degree),
+//       ),
+//     );
+//   }
+// }

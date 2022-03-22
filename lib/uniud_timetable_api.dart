@@ -220,6 +220,10 @@ class UniudTimetableAPI {
   }
 }
 
+abstract class NamedItem {
+  String get name;
+}
+
 class Profile {
   final String departmentName;
   final String degreeTypeName;
@@ -237,7 +241,8 @@ class DegreesRawIndex {
   DegreesRawIndex(this.index);
 }
 
-class Department {
+class Department implements NamedItem {
+  @override
   final String name;
   final String id;
   final dynamic degreeTypesRawData;
@@ -245,7 +250,8 @@ class Department {
   Department(this.name, this.id, this.degreeTypesRawData);
 }
 
-class DegreeType {
+class DegreeType implements NamedItem {
+  @override
   final String name;
   final String id;
   final dynamic degreesRawData;
@@ -253,7 +259,8 @@ class DegreeType {
   DegreeType(this.name, this.id, this.degreesRawData);
 }
 
-class Degree {
+class Degree implements NamedItem {
+  @override
   final String name;
   final String id;
   final dynamic periodsRawData;
@@ -261,7 +268,8 @@ class Degree {
   Degree(this.name, this.id, this.periodsRawData);
 }
 
-class Period {
+class Period implements NamedItem {
+  @override
   final String name;
   final String id;
 
