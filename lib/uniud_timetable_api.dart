@@ -6,9 +6,9 @@ import 'package:xml/xml.dart';
 
 class UniudTimetableAPI {
   // API Endpoints
-  final _degreesIndexEndpoint = Uri.parse('https://planner.uniud.it/PortaleStudenti/api_profilo_aa_scuola_tipo_cdl_pd.php');
-  final _degreeCoursesEndpoint = Uri.parse('https://planner.uniud.it/PortaleStudenti/api_profilo_lista_insegnamenti.php');
-  final _courseInfoEndpoint = Uri.parse('https://planner.uniud.it/PortaleStudenti//App/zipped.php');
+  static final _degreesIndexEndpoint = Uri.parse('https://planner.uniud.it/PortaleStudenti/api_profilo_aa_scuola_tipo_cdl_pd.php');
+  static final _degreeCoursesEndpoint = Uri.parse('https://planner.uniud.it/PortaleStudenti/api_profilo_lista_insegnamenti.php');
+  static final _courseInfoEndpoint = Uri.parse('https://planner.uniud.it/PortaleStudenti//App/zipped.php');
 
   UniudTimetableAPI();
 
@@ -17,7 +17,7 @@ class UniudTimetableAPI {
   /// Department -> Type of Degree -> Degree -> Period
   /// Class objects will be instantiated only when necessary during the
   /// traversing of the data hierarchy: lazy approach.
-  Future<DegreesRawIndex> getDegreesRawIndex() async {
+  static Future<DegreesRawIndex> getDegreesRawIndex() async {
     var response = await http.get(_degreesIndexEndpoint);
 
     if (response.statusCode == 200) {
@@ -28,7 +28,7 @@ class UniudTimetableAPI {
     }
   }
 
-  List<Department> getDepartments(DegreesRawIndex degreesRawIndex) {
+  static List<Department> getDepartments(DegreesRawIndex degreesRawIndex) {
     try {
       List<Department> departments = [];
       for (final department in degreesRawIndex.index as List<dynamic>) {
@@ -47,7 +47,7 @@ class UniudTimetableAPI {
     }
   }
 
-  List<DegreeType> getDegreeTypes(Department department) {
+  static List<DegreeType> getDegreeTypes(Department department) {
     try {
       List<DegreeType> degreeTypes = [];
       for (final degreeType in department.degreeTypesRawData as List<dynamic>) {
@@ -66,7 +66,7 @@ class UniudTimetableAPI {
     }
   }
 
-  List<Degree> getDegrees(DegreeType degreeType) {
+  static List<Degree> getDegrees(DegreeType degreeType) {
     try {
       List<Degree> degrees = [];
       for (final degree in degreeType.degreesRawData as List<dynamic>) {
@@ -85,7 +85,7 @@ class UniudTimetableAPI {
     }
   }
 
-  List<Period> getPeriods(Degree degree) {
+  static List<Period> getPeriods(Degree degree) {
     try {
       List<Period> periods = [];
       for (final period in degree.periodsRawData as List<dynamic>) {
@@ -103,7 +103,7 @@ class UniudTimetableAPI {
     }
   }
 
-  Future<List<CourseDescriptor>> getCourseDescriptors(Degree degree, Period period) async {
+  static Future<List<CourseDescriptor>> getCourseDescriptors(Degree degree, Period period) async {
     final enpoint = Uri.https(
         _degreeCoursesEndpoint.authority,
         _degreeCoursesEndpoint.path,
@@ -138,7 +138,7 @@ class UniudTimetableAPI {
     }
   }
 
-  Future<Course> getCourse(CourseDescriptor courseDescriptor) async {
+  static Future<Course> getCourse(CourseDescriptor courseDescriptor) async {
     final enpoint = Uri.https(
         _courseInfoEndpoint.authority,
         _courseInfoEndpoint.path,
