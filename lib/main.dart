@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:uniud_timetable_app/profile_configuration_flows/uniud_conf_flow.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
@@ -54,13 +52,20 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
-      floatingActionButton: Visibility(
-        visible: _addProfileButtonVisible,
-        child: FloatingActionButton(
-          child: const Icon(Icons.add),
-          onPressed: () { showAboutDialog(context: context); },
+      floatingActionButton: AnimatedSwitcher(
+        duration: const Duration(milliseconds: 200),
+        transitionBuilder: (Widget child, Animation<double> animation) {
+          return ScaleTransition(scale: animation, child: child);
+        },
+        child: Visibility(
+          key: ValueKey<bool>(_addProfileButtonVisible),
+          visible: _addProfileButtonVisible,
+          child: FloatingActionButton(
+            child: const Icon(Icons.add),
+            onPressed: () {showAboutDialog(context: context);},
+          ),
         ),
-      ), // TODO
+      ),
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
@@ -215,3 +220,5 @@ class _ProfilesPageState extends State<ProfilesPage> {
     );
   }
 }
+
+// TODO add the liceses in the settings page: showAboutDialog(context: context);

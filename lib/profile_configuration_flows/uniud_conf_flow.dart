@@ -5,7 +5,8 @@ class DepartmentSelectionPage extends StatefulWidget {
   const DepartmentSelectionPage({Key? key}) : super(key: key);
 
   @override
-  State<DepartmentSelectionPage> createState() => _DepartmentSelectionPageState();
+  State<DepartmentSelectionPage> createState() =>
+      _DepartmentSelectionPageState();
 }
 
 class _DepartmentSelectionPageState extends State<DepartmentSelectionPage> {
@@ -13,11 +14,9 @@ class _DepartmentSelectionPageState extends State<DepartmentSelectionPage> {
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: UniudTimetableAPI.getDegreesRawIndex(),
-      builder:
-          (BuildContext context, AsyncSnapshot<DegreesRawIndex> snapshot) {
+      builder: (BuildContext context, AsyncSnapshot<DegreesRawIndex> snapshot) {
         if (snapshot.hasData) {
-          final deparments =
-          UniudTimetableAPI.getDepartments(snapshot.data!);
+          final deparments = UniudTimetableAPI.getDepartments(snapshot.data!);
           return ListView.separated(
             itemCount: deparments.length,
             separatorBuilder: (context, index) => const Divider(),
@@ -47,7 +46,7 @@ class _DepartmentSelectionPageState extends State<DepartmentSelectionPage> {
                     padding: EdgeInsets.only(left: 32, right: 32),
                     child: Text(
                       'An error has occurred while loading data from UNIUD '
-                          'services, please try again later.',
+                      'services, please try again later.',
                       textAlign: TextAlign.justify,
                       style: TextStyle(
                         fontSize: 16,
@@ -84,7 +83,7 @@ class _DepartmentSelectionPageState extends State<DepartmentSelectionPage> {
             ),
           );
         }
-      }
+      },
     );
   }
 
@@ -104,7 +103,8 @@ class DegreeTypeSelectionPage extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<DegreeTypeSelectionPage> createState() => _DegreeTypeSelectionPageState();
+  State<DegreeTypeSelectionPage> createState() =>
+      _DegreeTypeSelectionPageState();
 }
 
 class _DegreeTypeSelectionPageState extends State<DegreeTypeSelectionPage> {
@@ -186,8 +186,7 @@ class _DegreeSelectionPageState extends State<DegreeSelectionPage> {
 class PeriodSelectionPage extends StatefulWidget {
   final Degree degree;
 
-  const PeriodSelectionPage({Key? key, required this.degree})
-      : super(key: key);
+  const PeriodSelectionPage({Key? key, required this.degree}) : super(key: key);
 
   @override
   State<PeriodSelectionPage> createState() => _PeriodSelectionPageState();
