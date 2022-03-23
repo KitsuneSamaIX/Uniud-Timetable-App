@@ -11,7 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'UNIUD Timetable App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -31,45 +31,86 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text("Homepage"),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: _pushSettingsPage,
-            tooltip: 'Settings',
-          ),
-        ],
-      ),
-      body: const Center(
-        child: Text(
-          "Hello Fellow Student!",
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+        elevation: 0,
+        backgroundColor: Colors.white,
+        titleSpacing: 0,
+        toolbarHeight: 80,
+        title: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Today',
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColorDark,
+                        fontSize: 18,
+                      ),
+                    ),
+                    const SizedBox(height: 5,),
+                    Text(
+                      'Monday, 22 March',
+                      style: TextStyle(
+                        color: Theme.of(context).primaryColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 22,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              IconButton(
+                iconSize: 35,
+                color: Theme.of(context).primaryColor,
+                icon: const Icon(Icons.menu),
+                onPressed: _pushMenuPage,
+                tooltip: 'Menu',
+              ),
+            ],
           ),
         ),
       ),
+      body: Column(
+        children: const [
+          Expanded(
+            child: Center(
+              child: Text(
+                'Hello Fellow Student!',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
-  void _pushSettingsPage() {
+  void _pushMenuPage() {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (context) => const SettingsPage(),
+        builder: (context) => const MenuPage(),
       ),
     );
   }
 }
 
-class SettingsPage extends StatefulWidget {
-  const SettingsPage({Key? key}) : super(key: key);
+class MenuPage extends StatefulWidget {
+  const MenuPage({Key? key}) : super(key: key);
 
   @override
-  State<SettingsPage> createState() => _SettingsPageState();
+  State<MenuPage> createState() => _MenuPageState();
 }
 
-class _SettingsPageState extends State<SettingsPage> {
+class _MenuPageState extends State<MenuPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
