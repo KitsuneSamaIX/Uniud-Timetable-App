@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:uniud_timetable_app/uniud_timetable_api.dart';
+import 'package:uniud_timetable_app/apis/uniud_timetable_api.dart';
 import 'package:xml/xml.dart';
 
 void main() {

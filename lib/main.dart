@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
-import 'package:uniud_timetable_app/uniud_timetable_api.dart';
+import 'package:uniud_timetable_app/profile_configuration_flows/uniud_conf_flow.dart';
+import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,6 +17,7 @@ class MyApp extends StatelessWidget {
       title: 'UNIUD Timetable App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+        backgroundColor: Colors.white,
       ),
       home: const HomePage(),
     );
@@ -28,10 +32,35 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  // Navigation bar
+  int _selectedIndex = 0;
+  final PageController _pageController = PageController();
+
+  // Add profile Floating Action Button
+  bool _addProfileButtonVisible = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).backgroundColor,
+      floatingActionButton: Visibility(
+        visible: _addProfileButtonVisible,
+        child: FloatingActionButton(
+          child: const Icon(Icons.add),
+          onPressed: () { showAboutDialog(context: context); },
+        ),
+      ), // TODO
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.white,
@@ -66,62 +95,114 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               IconButton(
-                iconSize: 35,
-                color: Theme.of(context).primaryColor,
-                icon: const Icon(Icons.menu),
-                onPressed: _pushMenuPage,
-                tooltip: 'Menu',
-              ),
+                iconSize: 30,
+                color: Colors.grey,
+                onPressed: _pushSettingsPage,
+                icon: const Icon(Icons.settings),
+              )
             ],
           ),
         ),
       ),
-      body: Column(
-        children: const [
-          Expanded(
-            child: Center(
-              child: Text(
-                'Hello Fellow Student!',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
+      bottomNavigationBar: BottomNavyBar(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        selectedIndex: _selectedIndex,
+        showElevation: true,
+        onItemSelected: (index) => setState(() {
+          _selectedIndex = index;
+          _pageController.animateToPage(
+            index,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.ease,
+          );
+        }),
+        items: [
+          BottomNavyBarItem(
+            icon: const Icon(Icons.apps),
+            title: const Text('Timetable'),
+            activeColor: Colors.red,
           ),
+          BottomNavyBarItem(
+              icon: const Icon(Icons.people),
+              title: const Text('Profiles'),
+              activeColor: Colors.purpleAccent
+          ),
+          // BottomNavyBarItem(
+          //     icon: const Icon(Icons.settings),
+          //     title: const Text('Settings'),
+          //     activeColor: Colors.blue
+          // ),
+        ],
+      ),
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: (index) => setState(() {
+          _selectedIndex = index;
+          if (index == 1) {
+            _addProfileButtonVisible = true;
+          } else {
+            _addProfileButtonVisible = false;
+          }
+        }),
+        children: const [
+          TimetablePage(),
+          ProfilesPage(),
         ],
       ),
     );
   }
 
-  void _pushMenuPage() {
+  void _pushSettingsPage() {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (context) => const MenuPage(),
+        builder: (context) => const ProfilesPage(),
       ),
     );
   }
 }
 
-class MenuPage extends StatefulWidget {
-  const MenuPage({Key? key}) : super(key: key);
+class TimetablePage extends StatefulWidget {
+  const TimetablePage({Key? key}) : super(key: key);
 
   @override
-  State<MenuPage> createState() => _MenuPageState();
+  State<TimetablePage> createState() => _TimetablePageState();
 }
 
-class _MenuPageState extends State<MenuPage> {
+class _TimetablePageState extends State<TimetablePage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Settings"),
-      ),
-      body: Center(
-        child: OutlinedButton(
-          child: const Text("Create Timetable"),
-          onPressed: _pushDepartmentSelectionPage,
+    return Column(
+      children: const [
+        Expanded(
+          child: Center(
+            child: Text(
+              'Hello Fellow Student!',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
         ),
+      ],
+    );
+  }
+}
+
+class ProfilesPage extends StatefulWidget {
+  const ProfilesPage({Key? key}) : super(key: key);
+
+  @override
+  State<ProfilesPage> createState() => _ProfilesPageState();
+}
+
+class _ProfilesPageState extends State<ProfilesPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: OutlinedButton(
+        child: const Text("Create Timetable"),
+        onPressed: _pushDepartmentSelectionPage,
       ),
     );
   }
@@ -131,229 +212,6 @@ class _MenuPageState extends State<MenuPage> {
       MaterialPageRoute<void>(
         builder: (context) => const DepartmentSelectionPage(),
       ),
-    );
-  }
-}
-
-// ---- COURSES SELECTOR PAGES ----
-
-class DepartmentSelectionPage extends StatefulWidget {
-  const DepartmentSelectionPage({Key? key}) : super(key: key);
-
-  @override
-  State<DepartmentSelectionPage> createState() => _DepartmentSelectionPageState();
-}
-
-class _DepartmentSelectionPageState extends State<DepartmentSelectionPage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Select your Department'),
-      ),
-      body: FutureBuilder(
-          future: UniudTimetableAPI.getDegreesRawIndex(),
-          builder:
-              (BuildContext context, AsyncSnapshot<DegreesRawIndex> snapshot) {
-            if (snapshot.hasData) {
-              final deparments =
-                  UniudTimetableAPI.getDepartments(snapshot.data!);
-              return ListView.separated(
-                itemCount: deparments.length,
-                separatorBuilder: (context, index) => const Divider(),
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(
-                      deparments[index].name,
-                      textAlign: TextAlign.center,
-                    ),
-                    onTap: () => _pushDegreeTypeSelectionPage(deparments[index]),
-                  );
-                },
-              );
-            } else if (snapshot.hasError) {
-              return Center(
-                child: Column(
-                  children: const <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(top: 32, bottom: 16),
-                      child: Icon(
-                        Icons.warning_amber_rounded,
-                        size: 64,
-                        color: Colors.orange,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 32, right: 32),
-                      child: Text(
-                        'An error has occurred while loading data from UNIUD '
-                            'services, please try again later.',
-                        textAlign: TextAlign.justify,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                )
-              );
-            } else {
-              return Center(
-                child: Column(
-                  // mainAxisAlignment: MainAxisAlignment.center,
-                  children: const <Widget>[
-                    SizedBox(
-                      height: 32,
-                    ),
-                    SizedBox(
-                      width: 60,
-                      height: 60,
-                      child: CircularProgressIndicator(),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 16),
-                      child: Text(
-                        'Loading data from UNIUD services...',
-                        style: TextStyle(
-                          fontSize: 16,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              );
-            }
-          }),
-    );
-  }
-
-  void _pushDegreeTypeSelectionPage(Department department) {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (context) => DegreeTypeSelectionPage(department: department),
-      ),
-    );
-  }
-}
-
-class DegreeTypeSelectionPage extends StatefulWidget {
-  final Department department;
-
-  const DegreeTypeSelectionPage({Key? key, required this.department})
-      : super(key: key);
-
-  @override
-  State<DegreeTypeSelectionPage> createState() => _DegreeTypeSelectionPageState();
-}
-
-class _DegreeTypeSelectionPageState extends State<DegreeTypeSelectionPage> {
-  @override
-  Widget build(BuildContext context) {
-    final degreeTypes = UniudTimetableAPI.getDegreeTypes(widget.department);
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Select your Degree Type'),
-      ),
-      body: ListView.separated(
-        itemCount: degreeTypes.length,
-        separatorBuilder: (context, index) => const Divider(),
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(
-              degreeTypes[index].name,
-              textAlign: TextAlign.center,
-            ),
-            onTap: () => _pushDegreeSelectionPage(degreeTypes[index]),
-          );
-        },
-      ),
-    );
-  }
-
-  void _pushDegreeSelectionPage(DegreeType degreeType) {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (context) => DegreeSelectionPage(degreeType: degreeType),
-      ),
-    );
-  }
-}
-
-class DegreeSelectionPage extends StatefulWidget {
-  final DegreeType degreeType;
-
-  const DegreeSelectionPage({Key? key, required this.degreeType})
-      : super(key: key);
-
-  @override
-  State<DegreeSelectionPage> createState() => _DegreeSelectionPageState();
-}
-
-class _DegreeSelectionPageState extends State<DegreeSelectionPage> {
-  @override
-  Widget build(BuildContext context) {
-    final degrees = UniudTimetableAPI.getDegrees(widget.degreeType);
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('Select your Degree'),
-        ),
-        body: ListView.separated(
-          itemCount: degrees.length,
-          separatorBuilder: (context, index) => const Divider(),
-          itemBuilder: (context, index) {
-            return ListTile(
-              title: Text(
-                degrees[index].name,
-                textAlign: TextAlign.center,
-              ),
-              onTap: () => _pushPeriodSelectionPage(degrees[index]),
-            );
-          },
-        ),
-    );
-  }
-
-  void _pushPeriodSelectionPage(Degree degree) {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (context) => PeriodSelectionPage(degree: degree),
-      ),
-    );
-  }
-}
-
-class PeriodSelectionPage extends StatefulWidget {
-  final Degree degree;
-
-  const PeriodSelectionPage({Key? key, required this.degree})
-      : super(key: key);
-
-  @override
-  State<PeriodSelectionPage> createState() => _PeriodSelectionPageState();
-}
-
-class _PeriodSelectionPageState extends State<PeriodSelectionPage> {
-  @override
-  Widget build(BuildContext context) {
-    final periods = UniudTimetableAPI.getPeriods(widget.degree);
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text('Select the Period'),
-        ),
-        body: ListView.separated(
-          itemCount: periods.length,
-          separatorBuilder: (context, index) => const Divider(),
-          itemBuilder: (context, index) {
-            return ListTile(
-              title: Text(
-                periods[index].name,
-                textAlign: TextAlign.center,
-              ),
-              // onTap: () => , // TODO
-            );
-          },
-        ),
     );
   }
 }
