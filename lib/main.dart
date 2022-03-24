@@ -35,7 +35,7 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   final PageController _pageController = PageController();
 
-  // Floating Action Button to add new profile
+  // Floating Action Button to add a new profile
   bool _addProfileButtonVisible = false;
   static const double _fabDimension = 56.0;
 
@@ -123,12 +123,33 @@ class _HomePageState extends State<HomePage> {
                   ],
                 ),
               ),
-              IconButton(
-                iconSize: 30,
-                color: Colors.grey,
-                onPressed: _pushSettingsPage,
-                icon: const Icon(Icons.settings),
-              )
+              OpenContainer(
+                transitionType: ContainerTransitionType.fade,
+                transitionDuration: const Duration(milliseconds: 400),
+                openBuilder: (BuildContext context, VoidCallback _) {
+                  return const SettingsPage();
+                },
+                closedElevation: 0,
+                closedShape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(_fabDimension / 2),
+                  ),
+                ),
+                closedColor: Colors.transparent,
+                closedBuilder: (BuildContext context, VoidCallback openContainer) {
+                  return const SizedBox(
+                    height: _fabDimension,
+                    width: _fabDimension,
+                    child: Center(
+                      child: Icon(
+                        Icons.settings,
+                        size: 32,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  );
+                },
+              ),
             ],
           ),
         ),
@@ -180,14 +201,6 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
-
-  void _pushSettingsPage() {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (context) => const ProfilesPage(),
-      ),
-    );
-  }
 }
 
 class TimetablePage extends StatefulWidget {
@@ -230,6 +243,39 @@ class _ProfilesPageState extends State<ProfilesPage> {
   Widget build(BuildContext context) {
     return const Center(
       child: Text("Uuh, so empty here..."),
+    );
+  }
+}
+
+class SettingsPage extends StatefulWidget {
+  const SettingsPage({Key? key}) : super(key: key);
+
+  @override
+  State<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends State<SettingsPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Settings'),
+      ),
+      body: Column(
+        children: const [
+          Expanded(
+            child: Center(
+              child: Text(
+                'Nothing to show here...',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
