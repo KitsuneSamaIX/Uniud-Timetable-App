@@ -12,78 +12,83 @@ class DepartmentSelectionPage extends StatefulWidget {
 class _DepartmentSelectionPageState extends State<DepartmentSelectionPage> {
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: UniudTimetableAPI.getDegreesRawIndex(),
-      builder: (BuildContext context, AsyncSnapshot<DegreesRawIndex> snapshot) {
-        if (snapshot.hasData) {
-          final deparments = UniudTimetableAPI.getDepartments(snapshot.data!);
-          return ListView.separated(
-            itemCount: deparments.length,
-            separatorBuilder: (context, index) => const Divider(),
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text(
-                  deparments[index].name,
-                  textAlign: TextAlign.center,
-                ),
-                onTap: () => _pushDegreeTypeSelectionPage(deparments[index]),
-              );
-            },
-          );
-        } else if (snapshot.hasError) {
-          return Center(
-              child: Column(
-                children: const <Widget>[
-                  Padding(
-                    padding: EdgeInsets.only(top: 32, bottom: 16),
-                    child: Icon(
-                      Icons.warning_amber_rounded,
-                      size: 64,
-                      color: Colors.orange,
-                    ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Select your Department'),
+      ),
+      body: FutureBuilder(
+        future: UniudTimetableAPI.getDegreesRawIndex(),
+        builder: (BuildContext context, AsyncSnapshot<DegreesRawIndex> snapshot) {
+          if (snapshot.hasData) {
+            final deparments = UniudTimetableAPI.getDepartments(snapshot.data!);
+            return ListView.separated(
+              itemCount: deparments.length,
+              separatorBuilder: (context, index) => const Divider(),
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(
+                    deparments[index].name,
+                    textAlign: TextAlign.center,
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(left: 32, right: 32),
-                    child: Text(
-                      'An error has occurred while loading data from UNIUD '
-                      'services, please try again later.',
-                      textAlign: TextAlign.justify,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                  onTap: () => _pushDegreeTypeSelectionPage(deparments[index]),
+                );
+              },
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+                child: Column(
+                  children: const <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(top: 32, bottom: 16),
+                      child: Icon(
+                        Icons.warning_amber_rounded,
+                        size: 64,
+                        color: Colors.orange,
                       ),
                     ),
-                  ),
-                ],
-              )
-          );
-        } else {
-          return Center(
-            child: Column(
-              // mainAxisAlignment: MainAxisAlignment.center,
-              children: const <Widget>[
-                SizedBox(
-                  height: 32,
-                ),
-                SizedBox(
-                  width: 60,
-                  height: 60,
-                  child: CircularProgressIndicator(),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(top: 16),
-                  child: Text(
-                    'Loading data from UNIUD services...',
-                    style: TextStyle(
-                      fontSize: 16,
+                    Padding(
+                      padding: EdgeInsets.only(left: 32, right: 32),
+                      child: Text(
+                        'An error has occurred while loading data from UNIUD '
+                            'services, please try again later.',
+                        textAlign: TextAlign.justify,
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
-                  ),
+                  ],
                 )
-              ],
-            ),
-          );
-        }
-      },
+            );
+          } else {
+            return Center(
+              child: Column(
+                // mainAxisAlignment: MainAxisAlignment.center,
+                children: const <Widget>[
+                  SizedBox(
+                    height: 32,
+                  ),
+                  SizedBox(
+                    width: 60,
+                    height: 60,
+                    child: CircularProgressIndicator(),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(top: 16),
+                    child: Text(
+                      'Loading data from UNIUD services...',
+                      style: TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            );
+          }
+        },
+      ),
     );
   }
 

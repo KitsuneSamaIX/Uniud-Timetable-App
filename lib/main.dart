@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:uniud_timetable_app/profile_configuration_flows/uniud_conf_flow.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
+import 'package:animations/animations.dart';
 
 void main() {
   runApp(const MyApp());
@@ -34,8 +35,9 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   final PageController _pageController = PageController();
 
-  // Add profile Floating Action Button
+  // Floating Action Button to add new profile
   bool _addProfileButtonVisible = false;
+  static const double _fabDimension = 56.0;
 
   @override
   void initState() {
@@ -60,9 +62,31 @@ class _HomePageState extends State<HomePage> {
         child: Visibility(
           key: ValueKey<bool>(_addProfileButtonVisible),
           visible: _addProfileButtonVisible,
-          child: FloatingActionButton(
-            child: const Icon(Icons.add),
-            onPressed: () {showAboutDialog(context: context);},
+          child: OpenContainer(
+            transitionType: ContainerTransitionType.fade,
+            transitionDuration: const Duration(milliseconds: 400),
+            openBuilder: (BuildContext context, VoidCallback _) {
+              return const DepartmentSelectionPage();
+            },
+            closedElevation: 6.0,
+            closedShape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(
+                Radius.circular(_fabDimension / 2),
+              ),
+            ),
+            closedColor: Theme.of(context).colorScheme.secondary,
+            closedBuilder: (BuildContext context, VoidCallback openContainer) {
+              return SizedBox(
+                height: _fabDimension,
+                width: _fabDimension,
+                child: Center(
+                  child: Icon(
+                    Icons.add,
+                    color: Theme.of(context).colorScheme.onSecondary,
+                  ),
+                ),
+              );
+            },
           ),
         ),
       ),
@@ -204,19 +228,8 @@ class ProfilesPage extends StatefulWidget {
 class _ProfilesPageState extends State<ProfilesPage> {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: OutlinedButton(
-        child: const Text("Create Timetable"),
-        onPressed: _pushDepartmentSelectionPage,
-      ),
-    );
-  }
-
-  void _pushDepartmentSelectionPage() {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder: (context) => const DepartmentSelectionPage(),
-      ),
+    return const Center(
+      child: Text("Uuh, so empty here..."),
     );
   }
 }
