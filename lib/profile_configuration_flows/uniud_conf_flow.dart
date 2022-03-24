@@ -28,64 +28,16 @@ class _DepartmentSelectionPageState extends State<DepartmentSelectionPage> {
                 return ListTile(
                   title: Text(
                     deparments[index].name,
-                    textAlign: TextAlign.center,
                   ),
+                  trailing: const Icon(Icons.arrow_forward_ios),
                   onTap: () => _pushDegreeTypeSelectionPage(deparments[index]),
                 );
               },
             );
           } else if (snapshot.hasError) {
-            return Center(
-                child: Column(
-                  children: const <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(top: 32, bottom: 16),
-                      child: Icon(
-                        Icons.warning_amber_rounded,
-                        size: 64,
-                        color: Colors.orange,
-                      ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(left: 32, right: 32),
-                      child: Text(
-                        'An error has occurred while loading data from UNIUD '
-                            'services, please try again later.',
-                        textAlign: TextAlign.justify,
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                )
-            );
+            return const _ConnectionErrorMessage();
           } else {
-            return Center(
-              child: Column(
-                // mainAxisAlignment: MainAxisAlignment.center,
-                children: const <Widget>[
-                  SizedBox(
-                    height: 32,
-                  ),
-                  SizedBox(
-                    width: 60,
-                    height: 60,
-                    child: CircularProgressIndicator(),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 16),
-                    child: Text(
-                      'Loading data from UNIUD services...',
-                      style: TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
-                  )
-                ],
-              ),
-            );
+            return const _LoadingScreen();
           }
         },
       ),
@@ -127,8 +79,8 @@ class _DegreeTypeSelectionPageState extends State<DegreeTypeSelectionPage> {
           return ListTile(
             title: Text(
               degreeTypes[index].name,
-              textAlign: TextAlign.center,
             ),
+            trailing: const Icon(Icons.arrow_forward_ios),
             onTap: () => _pushDegreeSelectionPage(degreeTypes[index]),
           );
         },
@@ -170,8 +122,8 @@ class _DegreeSelectionPageState extends State<DegreeSelectionPage> {
           return ListTile(
             title: Text(
               degrees[index].name,
-              textAlign: TextAlign.center,
             ),
+            trailing: const Icon(Icons.arrow_forward_ios),
             onTap: () => _pushPeriodSelectionPage(degrees[index]),
           );
         },
@@ -212,11 +164,135 @@ class _PeriodSelectionPageState extends State<PeriodSelectionPage> {
           return ListTile(
             title: Text(
               periods[index].name,
-              textAlign: TextAlign.center,
             ),
-            // onTap: () => , // TODO
+            trailing: const Icon(Icons.arrow_forward_ios),
+            onTap: () => _pushCourseSelectionPage(widget.degree, periods[index]),
           );
         },
+      ),
+    );
+  }
+
+  void _pushCourseSelectionPage(Degree degree, Period period) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (context) =>
+            CourseSelectionPage(degree: degree, period: period),
+      ),
+    );
+  }
+}
+
+class CourseSelectionPage extends StatefulWidget {
+  final Degree degree;
+  final Period period;
+
+  const CourseSelectionPage(
+      {Key? key, required this.degree, required this.period}) : super(key: key);
+
+  @override
+  State<CourseSelectionPage> createState() => _CourseSelectionPageState();
+}
+
+class _CourseSelectionPageState extends State<CourseSelectionPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Select your Courses'),
+      ),
+      body: FutureBuilder(
+        future: UniudTimetableAPI.getCourseDescriptors(widget.degree, widget.period),
+        builder: (BuildContext context, AsyncSnapshot<List<CourseDescriptor>> snapshot) {
+          if (snapshot.hasData) {
+            final courses = snapshot.data!;
+            return ListView.separated(
+              itemCount: courses.length,
+              separatorBuilder: (context, index) => const Divider(),
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text(
+                    courses[index].name,
+                  ),
+                  trailing: const Icon(Icons.arrow_forward_ios),
+                  // onTap: () => , // TODO
+                );
+              },
+            );
+          } else if (snapshot.hasError) {
+            return const _ConnectionErrorMessage();
+          } else {
+            return const _LoadingScreen();
+          }
+        },
+      ),
+    );
+  }
+}
+
+// COMMON
+
+class _ConnectionErrorMessage extends StatelessWidget {
+  const _ConnectionErrorMessage({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+        child: Column(
+          children: const <Widget>[
+            Padding(
+              padding: EdgeInsets.only(top: 32, bottom: 16),
+              child: Icon(
+                Icons.warning_amber_rounded,
+                size: 64,
+                color: Colors.orange,
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 32, right: 32),
+              child: Text(
+                'An error has occurred while loading data from UNIUD '
+                    'services, please try again later.',
+                textAlign: TextAlign.justify,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ],
+        )
+    );
+  }
+}
+
+class _LoadingScreen extends StatelessWidget {
+  const _LoadingScreen({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Column(
+        // mainAxisAlignment: MainAxisAlignment.center,
+        children: const <Widget>[
+          SizedBox(
+            height: 32,
+          ),
+          SizedBox(
+            width: 60,
+            height: 60,
+            child: CircularProgressIndicator(),
+          ),
+          Padding(
+            padding: EdgeInsets.only(top: 16),
+            child: Text(
+              'Loading data from UNIUD services...',
+              style: TextStyle(
+                fontSize: 16,
+              ),
+            ),
+          )
+        ],
       ),
     );
   }
