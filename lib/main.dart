@@ -15,8 +15,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'UNIUD Timetable App',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-        backgroundColor: Colors.white,
+        colorSchemeSeed: Colors.green,
+        brightness: Brightness.light,
+        // backgroundColor: Colors.white,
       ),
       home: const HomePage(),
     );
@@ -92,7 +93,7 @@ class _HomePageState extends State<HomePage> {
       ),
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.background,
         titleSpacing: 0,
         toolbarHeight: 80,
         title: Padding(
@@ -107,7 +108,7 @@ class _HomePageState extends State<HomePage> {
                     Text(
                       'Today',
                       style: TextStyle(
-                        color: Theme.of(context).primaryColorDark,
+                        color: Theme.of(context).colorScheme.secondary,
                         fontSize: 18,
                       ),
                     ),
@@ -115,7 +116,7 @@ class _HomePageState extends State<HomePage> {
                     Text(
                       'Monday, 22 March',
                       style: TextStyle(
-                        color: Theme.of(context).primaryColor,
+                        color: Theme.of(context).colorScheme.primary,
                         fontWeight: FontWeight.bold,
                         fontSize: 22,
                       ),
