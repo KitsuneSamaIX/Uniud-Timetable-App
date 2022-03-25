@@ -122,6 +122,7 @@ class UniudTimetableAPI {
           courseDescriptors.add(
               CourseDescriptor(
                   courseDescriptor['nome'] as String,
+                  courseDescriptor['docente'] as String,
                   courseDescriptor['crediti'] as String,
                   courseDescriptor['file'] as String
               )
@@ -270,10 +271,25 @@ class Period {
 
 class CourseDescriptor {
   final String name;
+  final String professor;
   final String credits;
   final String fileId;
 
-  CourseDescriptor(this.name, this.credits, this.fileId);
+  CourseDescriptor(this.name, this.professor, this.credits, this.fileId);
+
+  @override
+  int get hashCode {
+    return fileId.hashCode;
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (other is CourseDescriptor) {
+      return fileId == other.fileId;
+    } else {
+      return false;
+    }
+  }
 }
 
 class Course {

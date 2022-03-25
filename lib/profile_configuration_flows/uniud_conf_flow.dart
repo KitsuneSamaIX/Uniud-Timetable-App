@@ -14,7 +14,7 @@ class _DepartmentSelectionPageState extends State<DepartmentSelectionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Select your Department'),
+        title: const Text('New Profile'),
       ),
       body: FutureBuilder(
         future: UniudTimetableAPI.getDegreesRawIndex(),
@@ -22,10 +22,15 @@ class _DepartmentSelectionPageState extends State<DepartmentSelectionPage> {
           if (snapshot.hasData) {
             final deparments = UniudTimetableAPI.getDepartments(snapshot.data!);
             return ListView.separated(
+              padding: const EdgeInsets.all(16),
               itemCount: deparments.length,
-              separatorBuilder: (context, index) => const Divider(),
+              separatorBuilder: (context, index) => const SizedBox(height: 16,),
               itemBuilder: (context, index) {
                 return ListTile(
+                  tileColor: Theme.of(context).colorScheme.primaryContainer,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                   title: Text(
                     deparments[index].name,
                   ),
@@ -73,10 +78,15 @@ class _DegreeTypeSelectionPageState extends State<DegreeTypeSelectionPage> {
         title: const Text('Select your Degree Type'),
       ),
       body: ListView.separated(
+        padding: const EdgeInsets.all(16),
         itemCount: degreeTypes.length,
-        separatorBuilder: (context, index) => const Divider(),
+        separatorBuilder: (context, index) => const SizedBox(height: 16,),
         itemBuilder: (context, index) {
           return ListTile(
+            tileColor: Theme.of(context).colorScheme.primaryContainer,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
             title: Text(
               degreeTypes[index].name,
             ),
@@ -116,10 +126,15 @@ class _DegreeSelectionPageState extends State<DegreeSelectionPage> {
         title: const Text('Select your Degree'),
       ),
       body: ListView.separated(
+        padding: const EdgeInsets.all(16),
         itemCount: degrees.length,
-        separatorBuilder: (context, index) => const Divider(),
+        separatorBuilder: (context, index) => const SizedBox(height: 16,),
         itemBuilder: (context, index) {
           return ListTile(
+            tileColor: Theme.of(context).colorScheme.primaryContainer,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
             title: Text(
               degrees[index].name,
             ),
@@ -158,10 +173,15 @@ class _PeriodSelectionPageState extends State<PeriodSelectionPage> {
         title: const Text('Select the Period'),
       ),
       body: ListView.separated(
+        padding: const EdgeInsets.all(16),
         itemCount: periods.length,
-        separatorBuilder: (context, index) => const Divider(),
+        separatorBuilder: (context, index) => const SizedBox(height: 16,),
         itemBuilder: (context, index) {
           return ListTile(
+            tileColor: Theme.of(context).colorScheme.primaryContainer,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
             title: Text(
               periods[index].name,
             ),
@@ -195,11 +215,19 @@ class CourseSelectionPage extends StatefulWidget {
 }
 
 class _CourseSelectionPageState extends State<CourseSelectionPage> {
+  final Set<CourseDescriptor> _selectedCourses = {};
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Select your Courses'),
+        actions: [
+          IconButton(
+            onPressed: () {}, // TODO
+            icon: const Icon(Icons.done),
+          ),
+        ],
       ),
       body: FutureBuilder(
         future: UniudTimetableAPI.getCourseDescriptors(widget.degree, widget.period),
@@ -207,15 +235,85 @@ class _CourseSelectionPageState extends State<CourseSelectionPage> {
           if (snapshot.hasData) {
             final courses = snapshot.data!;
             return ListView.separated(
+              padding: const EdgeInsets.all(16),
               itemCount: courses.length,
-              separatorBuilder: (context, index) => const Divider(),
+              separatorBuilder: (context, index) => const SizedBox(height: 16,),
               itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text(
-                    courses[index].name,
+                return CheckboxListTile(
+                  contentPadding: const EdgeInsets.symmetric(
+                    vertical: 8,
+                    horizontal: 4,
                   ),
-                  trailing: const Icon(Icons.arrow_forward_ios),
-                  // onTap: () => , // TODO
+                  tileColor: Theme.of(context).colorScheme.primaryContainer,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  title: Row(
+                    children: [
+                      IconButton(
+                        onPressed: () => showDialog<String>(
+                          context: context,
+                          builder: (BuildContext context) => AlertDialog(
+                            title: Text(courses[index].name),
+                            // content: const Text('AlertDialog description'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(),
+                                child: const Text('OK'),
+                              ),
+                            ],
+                          ),
+                        ),
+                        icon: const Icon(Icons.info_outline),
+                      ),
+                      Expanded(
+                        flex: 100,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              courses[index].name,
+                              maxLines: 1,
+                              softWrap: false,
+                              overflow: TextOverflow.fade,
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.onPrimaryContainer,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              '${courses[index].credits} CFU',
+                              maxLines: 1,
+                              softWrap: false,
+                              overflow: TextOverflow.fade,
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.onPrimaryContainer,
+                              ),
+                            ),
+                            Text(
+                              courses[index].professor != '' ? 'Prof. ${courses[index].professor}' : '',
+                              maxLines: 1,
+                              softWrap: false,
+                              overflow: TextOverflow.fade,
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.onPrimaryContainer,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  value: _selectedCourses.contains(courses[index]),
+                  onChanged: (value) {
+                    setState(() {
+                      if (value ?? false) {
+                        _selectedCourses.add(courses[index]);
+                      } else {
+                        _selectedCourses.remove(courses[index]);
+                      }
+                    });
+                  },
                 );
               },
             );
