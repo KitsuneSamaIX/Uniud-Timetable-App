@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:animations/animations.dart';
+import 'package:intl/intl.dart';
 import 'package:uniud_timetable_app/pages/settings_page.dart';
 import 'package:uniud_timetable_app/pages/main_pages/timetable_page.dart';
 import 'package:uniud_timetable_app/pages/main_pages/profiles_page.dart';
@@ -35,6 +36,11 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    // Create date string
+    final now = DateTime.now();
+    final formatter = DateFormat('EEEE, d MMMM');
+    final formattedDate = formatter.format(now);
+
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       floatingActionButton: AnimatedSwitcher(
@@ -96,7 +102,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     const SizedBox(height: 5,),
                     Text(
-                      'Monday, 22 March',
+                      formattedDate,
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.primary,
                         fontWeight: FontWeight.bold,
