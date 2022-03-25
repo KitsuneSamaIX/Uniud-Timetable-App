@@ -138,6 +138,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       bottomNavigationBar: BottomNavyBar(
+        backgroundColor: Theme.of(context).colorScheme.background,
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         selectedIndex: _selectedIndex,
         showElevation: true,

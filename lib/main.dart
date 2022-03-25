@@ -13,9 +13,8 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'UNIUD Timetable App',
       theme: ThemeData(
-        colorSchemeSeed: Colors.green,
+        colorSchemeSeed: Colors.teal,
         brightness: Brightness.light,
-        // backgroundColor: Colors.white,
       ),
       home: const HomePage(),
     );
