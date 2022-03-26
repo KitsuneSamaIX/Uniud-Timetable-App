@@ -19,13 +19,19 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   final PageController _pageController = PageController();
 
-  // Floating Action Button to add a new profile
+  // Floating Action Button
   bool _addProfileButtonVisible = false;
   static const double _fabDimension = 56.0;
+
+  late final String _formattedDate;
 
   @override
   void initState() {
     super.initState();
+    // Formatted date string
+    final now = DateTime.now();
+    final formatter = DateFormat('EEEE, d MMMM');
+    _formattedDate = formatter.format(now);
   }
 
   @override
@@ -36,11 +42,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    // Create date string
-    final now = DateTime.now();
-    final formatter = DateFormat('EEEE, d MMMM');
-    final formattedDate = formatter.format(now);
-
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       floatingActionButton: AnimatedSwitcher(
@@ -84,64 +85,40 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Theme.of(context).colorScheme.background,
         titleSpacing: 0,
         toolbarHeight: 80,
-        title: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Today',
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.secondary,
-                        fontSize: 18,
-                      ),
-                    ),
-                    const SizedBox(height: 5,),
-                    Text(
-                      formattedDate,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              OpenContainer(
-                transitionType: ContainerTransitionType.fade,
-                transitionDuration: const Duration(milliseconds: 400),
-                openBuilder: (BuildContext context, VoidCallback _) {
-                  return const SettingsPage();
-                },
-                closedElevation: 0,
-                closedShape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(_fabDimension / 2),
+        title: Align(
+          alignment: Alignment.centerLeft,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Today',
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.secondary,
+                    fontSize: 18,
                   ),
                 ),
-                closedColor: Colors.transparent,
-                closedBuilder: (BuildContext context, VoidCallback openContainer) {
-                  return const SizedBox(
-                    height: _fabDimension,
-                    width: _fabDimension,
-                    child: Center(
-                      child: Icon(
-                        Icons.settings,
-                        size: 32,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ],
+                const SizedBox(height: 5,),
+                Text(
+                  _formattedDate,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.primary,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
+        actions: const [
+          Padding(
+            padding: EdgeInsets.only(right: 16),
+            child: _SettingsOpenContainer(),
+          ),
+        ],
       ),
       bottomNavigationBar: BottomNavyBar(
         backgroundColor: Theme.of(context).colorScheme.background,
@@ -189,6 +166,43 @@ class _HomePageState extends State<HomePage> {
           ProfilesPage(),
         ],
       ),
+    );
+  }
+}
+
+class _SettingsOpenContainer extends StatelessWidget {
+  static const double _dimension = 32;
+
+  const _SettingsOpenContainer({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return OpenContainer(
+      transitionType: ContainerTransitionType.fade,
+      transitionDuration: const Duration(milliseconds: 400),
+      openBuilder: (BuildContext context, VoidCallback _) {
+        return const SettingsPage();
+      },
+      closedElevation: 0,
+      closedShape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(
+          Radius.circular(_dimension / 2),
+        ),
+      ),
+      closedColor: Colors.transparent,
+      closedBuilder: (BuildContext context, VoidCallback openContainer) {
+        return const SizedBox(
+          height: _dimension,
+          width: _dimension,
+          child: Center(
+            child: Icon(
+              Icons.settings,
+              size: 32,
+              color: Colors.grey,
+            ),
+          ),
+        );
+      },
     );
   }
 }

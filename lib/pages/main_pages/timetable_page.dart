@@ -9,7 +9,13 @@ class TimetablePage extends StatefulWidget {
 }
 
 class _TimetablePageState extends State<TimetablePage> {
-  var _selectedDay = DateTime.now();
+  late DateTime _selectedDay;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedDay = DateTime.now();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,15 +32,20 @@ class _TimetablePageState extends State<TimetablePage> {
           activeDayColor: Theme.of(context).colorScheme.primary,
           activeBackgroundDayColor: Theme.of(context).colorScheme.primaryContainer,
         ),
-        const Expanded(
+        Expanded(
           child: Center(
-            child: Text(
-              'Hello Fellow Student!',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+            child: ElevatedButton(
+              child: const Text(
+                'Test button: return to today',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
+              onPressed: () => setState(() {
+                _selectedDay = DateTime.now();
+              }),
+            )
           ),
         ),
       ],
