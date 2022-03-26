@@ -23,17 +23,6 @@ class _HomePageState extends State<HomePage> {
   bool _addProfileButtonVisible = false;
   static const double _fabDimension = 56.0;
 
-  late final String _formattedDate;
-
-  @override
-  void initState() {
-    super.initState();
-    // Formatted date string
-    final now = DateTime.now();
-    final formatter = DateFormat('EEEE, d MMMM');
-    _formattedDate = formatter.format(now);
-  }
-
   @override
   void dispose() {
     _pageController.dispose();
@@ -85,40 +74,20 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: Theme.of(context).colorScheme.background,
         titleSpacing: 0,
         toolbarHeight: 80,
-        title: Align(
-          alignment: Alignment.centerLeft,
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Today',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.secondary,
-                    fontSize: 18,
-                  ),
-                ),
-                const SizedBox(height: 5,),
-                Text(
-                  _formattedDate,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.primary,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 22,
-                  ),
-                ),
-              ],
+        title: Row(
+          children: [
+            Expanded(
+              child: _TodayHeading(
+                date: DateTime.now(),
+                padding: const EdgeInsets.all(16),
+              ),
             ),
-          ),
+            const Padding(
+              padding: EdgeInsets.only(right: 16),
+              child: _SettingsOpenContainer(),
+            ),
+          ],
         ),
-        actions: const [
-          Padding(
-            padding: EdgeInsets.only(right: 16),
-            child: _SettingsOpenContainer(),
-          ),
-        ],
       ),
       bottomNavigationBar: BottomNavyBar(
         backgroundColor: Theme.of(context).colorScheme.background,
@@ -164,6 +133,48 @@ class _HomePageState extends State<HomePage> {
         children: const [
           TimetablePage(),
           ProfilesPage(),
+        ],
+      ),
+    );
+  }
+}
+
+class _TodayHeading extends StatelessWidget {
+  final DateTime date;
+  final EdgeInsetsGeometry padding;
+
+  const _TodayHeading({Key? key, required this.date, required this.padding})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // Formatted date string
+    final now = DateTime.now();
+    final formatter = DateFormat('EEEE, d MMMM');
+    final formattedDate = formatter.format(now);
+
+    return Padding(
+      padding: padding,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            'Today',
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.secondary,
+              fontSize: 18,
+            ),
+          ),
+          const SizedBox(height: 5,),
+          Text(
+            formattedDate,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.primary,
+              fontWeight: FontWeight.bold,
+              fontSize: 22,
+            ),
+          ),
         ],
       ),
     );
