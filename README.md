@@ -1,16 +1,17 @@
-# uniud_timetable_app
+# Uniud Timetable App
 
-A timetable app for uniud
+A cross-platform application, written in Flutter, which displays a curated and customizable timetable of the courses from my university.
 
-## Getting Started
+## UI/UX
 
-This project is a starting point for a Flutter application.
+The application features a modern UI/UX which conforms with Google's last Material design guidelines (More informations on [Material.io](https://material.io)).
 
-A few resources to get you started if this is your first Flutter project:
+## The tech stack
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+The application is written in the **Dart** language on the **Flutter** framework.
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Modularity and expandability
+
+The application is built with modularity in mind, hence easily expandable to support other universities' timetable APIs.
+
+In the future I could document more about the right way to expand this application to support other universities, in the meantime you could guess it by looking at the code :)
