@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppThemeModel extends ChangeNotifier {
   var colorSchemeSeed = Colors.teal;
-  var themeMode = ThemeMode.system;
+  var themeMode = ThemeMode.dark;
 
   void setThemeMode(ThemeMode themeMode) {
     if (this.themeMode != themeMode) {

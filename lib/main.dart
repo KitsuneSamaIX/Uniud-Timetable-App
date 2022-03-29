@@ -30,7 +30,6 @@ class MaterialAppWithTheme extends StatelessWidget {
       theme: ThemeData(
         brightness: Brightness.light,
         colorSchemeSeed: themeProvider.colorSchemeSeed,
-        // useMaterial3: true, // TODO controlla cosa succede se attivo sta roba
       ),
       darkTheme: ThemeData(
         brightness: Brightness.dark,

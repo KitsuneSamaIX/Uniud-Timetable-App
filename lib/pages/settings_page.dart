@@ -175,7 +175,7 @@ class _ThemeModeOption extends StatelessWidget {
               width: constraints.maxWidth,
               height: constraints.maxWidth,
               decoration: BoxDecoration(
-                color: selected ? Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.background,
+                color: selected ? Theme.of(context).colorScheme.primary : null,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
                   color: Theme.of(context).colorScheme.primary,

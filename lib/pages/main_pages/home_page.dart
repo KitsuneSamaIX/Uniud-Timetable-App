@@ -43,7 +43,7 @@ class _HomePageState extends State<HomePage> {
           visible: _addProfileButtonVisible,
           child: OpenContainer(
             transitionType: ContainerTransitionType.fade,
-            transitionDuration: const Duration(milliseconds: 400),
+            transitionDuration: const Duration(milliseconds: 350),
             openBuilder: (BuildContext context, VoidCallback _) {
               return const DepartmentSelectionPage();
             },
@@ -94,12 +94,13 @@ class _HomePageState extends State<HomePage> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         selectedIndex: _selectedIndex,
         showElevation: true,
+        animationDuration: const Duration(milliseconds: 250),
         onItemSelected: (index) => setState(() {
           _selectedIndex = index;
           _pageController.animateToPage(
             index,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.ease,
+            duration: const Duration(milliseconds: 250),
+            curve: Curves.easeOutCubic,
           );
         }),
         items: [
@@ -190,7 +191,7 @@ class _SettingsOpenContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return OpenContainer(
       transitionType: ContainerTransitionType.fade,
-      transitionDuration: const Duration(milliseconds: 400),
+      transitionDuration: const Duration(milliseconds: 250),
       openBuilder: (BuildContext context, VoidCallback _) {
         return const SettingsPage();
       },
