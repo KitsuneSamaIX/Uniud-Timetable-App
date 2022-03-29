@@ -122,6 +122,7 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       body: PageView(
+        physics: const NeverScrollableScrollPhysics(),
         controller: _pageController,
         onPageChanged: (index) => setState(() {
           _selectedIndex = index;
