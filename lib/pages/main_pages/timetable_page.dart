@@ -1,7 +1,5 @@
 import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:uniud_timetable_app/utilities/app_theme_changer.dart';
 
 class TimetablePage extends StatefulWidget {
   const TimetablePage({Key? key}) : super(key: key);
@@ -38,17 +36,16 @@ class _TimetablePageState extends State<TimetablePage> {
           child: Center(
             child: ElevatedButton(
               child: const Text(
-                'Test button: return to today',
+                'Test button',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              // onPressed: () => setState(() {
-              //   _selectedDay = DateTime.now();
-              // }),
-              onPressed: () => Provider.of<AppThemeModel>(context, listen: false).setTheme(ThemeData(colorSchemeSeed: Colors.blue, brightness: Brightness.light,)),
-            )
+              onPressed: () => setState(() {
+                _selectedDay = DateTime.now();
+              }),
+            ),
           ),
         ),
       ],

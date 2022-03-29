@@ -24,9 +24,19 @@ class MaterialAppWithTheme extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<AppThemeModel>(context);
     return MaterialApp(
       title: 'UNIUD Timetable App',
-      theme: Provider.of<AppThemeModel>(context).theme,
+      theme: ThemeData(
+        brightness: Brightness.light,
+        colorSchemeSeed: themeProvider.colorSchemeSeed,
+        // useMaterial3: true, // TODO controlla cosa succede se attivo sta roba
+      ),
+      darkTheme: ThemeData(
+        brightness: Brightness.dark,
+        colorSchemeSeed: themeProvider.colorSchemeSeed,
+      ),
+      themeMode: themeProvider.themeMode,
       home: const HomePage(),
     );
   }

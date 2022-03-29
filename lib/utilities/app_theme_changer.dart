@@ -1,17 +1,30 @@
 import 'package:flutter/material.dart';
 
 class AppThemeModel extends ChangeNotifier {
-  /// Private field containing the app's current theme. It also defines the
-  /// app's default theme.
-  ThemeData _theme = ThemeData(
-    colorSchemeSeed: Colors.teal,
-    brightness: Brightness.dark,
-  );
+  var colorSchemeSeed = Colors.teal;
+  var themeMode = ThemeMode.system;
 
-  ThemeData get theme => _theme;
+  void setThemeMode(ThemeMode themeMode) {
+    if (this.themeMode != themeMode) {
+      this.themeMode = themeMode;
+      notifyListeners();
+    }
+  }
 
-  void setTheme(ThemeData theme) {
-    _theme = theme;
-    notifyListeners();
+  void setColorSchemeSeed(MaterialColor colorSchemeSeed) {
+    if (this.colorSchemeSeed != colorSchemeSeed) {
+      this.colorSchemeSeed = colorSchemeSeed;
+      notifyListeners();
+    }
+  }
+
+  void setTheme({ThemeMode? themeMode, MaterialColor? colorSchemeSeed}) {
+    if (themeMode != null || colorSchemeSeed != null) {
+      if (this.themeMode != themeMode || this.colorSchemeSeed != colorSchemeSeed) {
+        this.themeMode = themeMode ?? this.themeMode;
+        this.colorSchemeSeed = colorSchemeSeed ?? this.colorSchemeSeed;
+        notifyListeners();
+      }
+    }
   }
 }
