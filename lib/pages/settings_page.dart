@@ -22,24 +22,11 @@ class _SettingsPageState extends State<SettingsPage> {
           items: [
             const _ThemeSettings(),
             _SettingsGroup(
-              title: 'Licenses',
+              title: 'Info',
               elements: [
-                ListTile(
+                _SettingsElement(
                   leading: const Icon(Icons.info_outline_rounded),
                   title: const Text('About'),
-                  trailing: const Icon(Icons.arrow_forward_ios),
-                  onTap: () => showAboutDialog(context: context),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.info_outline_rounded),
-                  title: const Text('About'),
-                  trailing: const Icon(Icons.arrow_forward_ios),
-                  onTap: () => showAboutDialog(context: context),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.info_outline_rounded),
-                  title: const Text('About'),
-                  trailing: const Icon(Icons.arrow_forward_ios),
                   onTap: () => showAboutDialog(context: context),
                 ),
               ],
@@ -70,11 +57,10 @@ class _SettingsGroup extends StatelessWidget {
             color: Theme.of(context).colorScheme.primaryContainer,
             borderRadius: BorderRadius.circular(16),
           ),
-          padding: const EdgeInsets.symmetric(vertical: 0), // TODO
           child: Column(
             children: _separateItems(
               items: elements,
-              separator: const Divider()
+              separator: const Divider(height: 0,)
             ),
           ),
         ),
@@ -84,13 +70,24 @@ class _SettingsGroup extends StatelessWidget {
 }
 
 class _SettingsElement extends StatelessWidget {
-  const _SettingsElement({Key? key})
+  final Widget? leading;
+  final Widget? title;
+  final Widget? trailing;
+  final void Function()? onTap;
+
+  const _SettingsElement({Key? key, this.leading, this.title, this.trailing, this.onTap})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
-    throw UnimplementedError();
+    return ListTile(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16),),
+      minLeadingWidth: 0,
+      leading: leading,
+      title: title,
+      trailing: trailing,
+      onTap: onTap,
+    );
   }
 }
 
