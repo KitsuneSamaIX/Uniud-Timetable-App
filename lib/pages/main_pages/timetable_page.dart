@@ -29,7 +29,7 @@ class _TimetablePageState extends State<TimetablePage> {
           leftMargin: 60,
           monthColor: Theme.of(context).colorScheme.secondary,
           dayColor: Theme.of(context).colorScheme.secondary,
-          activeDayColor: Theme.of(context).colorScheme.primary,
+          activeDayColor: Theme.of(context).colorScheme.onPrimaryContainer,
           activeBackgroundDayColor: Theme.of(context).colorScheme.primaryContainer,
         ),
         Expanded(

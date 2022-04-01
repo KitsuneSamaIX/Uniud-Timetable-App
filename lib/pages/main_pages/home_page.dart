@@ -107,18 +107,13 @@ class _HomePageState extends State<HomePage> {
           BottomNavyBarItem(
             icon: const Icon(Icons.apps),
             title: const Text('Timetable'),
-            activeColor: Colors.red,
+            activeColor: Theme.of(context).primaryColor,
           ),
           BottomNavyBarItem(
-              icon: const Icon(Icons.people),
-              title: const Text('Profiles'),
-              activeColor: Colors.purpleAccent
+            icon: const Icon(Icons.people),
+            title: const Text('Profiles'),
+            activeColor: Theme.of(context).primaryColor,
           ),
-          // BottomNavyBarItem(
-          //     icon: const Icon(Icons.settings),
-          //     title: const Text('Settings'),
-          //     activeColor: Colors.blue
-          // ),
         ],
       ),
       body: PageView(
