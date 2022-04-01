@@ -32,7 +32,6 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
       floatingActionButton: AnimatedSwitcher(
         duration: const Duration(milliseconds: 200),
         transitionBuilder: (Widget child, Animation<double> animation) {
@@ -70,8 +69,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       appBar: AppBar(
-        elevation: 0,
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         titleSpacing: 0,
         toolbarHeight: 80,
         title: Row(
@@ -89,13 +87,36 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavyBar(
-        backgroundColor: Theme.of(context).colorScheme.background,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+      // bottomNavigationBar: BottomNavyBar(
+      //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+      //   selectedIndex: _selectedIndex,
+      //   showElevation: true,
+      //   animationDuration: const Duration(milliseconds: 250),
+      //   onItemSelected: (index) => setState(() {
+      //     _selectedIndex = index;
+      //     _pageController.animateToPage(
+      //       index,
+      //       duration: const Duration(milliseconds: 250),
+      //       curve: Curves.easeOutCubic,
+      //     );
+      //   }),
+      //   items: [
+      //     BottomNavyBarItem(
+      //       icon: const Icon(Icons.apps),
+      //       title: const Text('Timetable'),
+      //       activeColor: Theme.of(context).primaryColor,
+      //     ),
+      //     BottomNavyBarItem(
+      //       icon: const Icon(Icons.people),
+      //       title: const Text('Profiles'),
+      //       activeColor: Theme.of(context).primaryColor,
+      //     ),
+      //   ],
+      // ),
+      bottomNavigationBar: NavigationBar(
+        labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
         selectedIndex: _selectedIndex,
-        showElevation: true,
-        animationDuration: const Duration(milliseconds: 250),
-        onItemSelected: (index) => setState(() {
+        onDestinationSelected: (index) => setState(() {
           _selectedIndex = index;
           _pageController.animateToPage(
             index,
@@ -103,17 +124,15 @@ class _HomePageState extends State<HomePage> {
             curve: Curves.easeOutCubic,
           );
         }),
-        items: [
-          BottomNavyBarItem(
-            icon: const Icon(Icons.apps),
-            title: const Text('Timetable'),
-            activeColor: Theme.of(context).primaryColor,
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.apps),
+            label: 'Timetable',
           ),
-          BottomNavyBarItem(
-            icon: const Icon(Icons.people),
-            title: const Text('Profiles'),
-            activeColor: Theme.of(context).primaryColor,
-          ),
+          NavigationDestination(
+            icon: Icon(Icons.people),
+            label: 'Profiles',
+          )
         ],
       ),
       body: PageView(

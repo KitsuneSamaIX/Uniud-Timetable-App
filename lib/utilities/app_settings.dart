@@ -4,12 +4,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AppSettings extends ChangeNotifier {
   // Theme (with defaults)
-  FlexScheme _flexScheme = FlexScheme.aquaBlue;
+  FlexScheme _flexScheme = FlexScheme.green;
   ThemeMode _themeMode = ThemeMode.dark;
+  bool _darkIsTrueBlack = false;
 
   FlexScheme get flexScheme => _flexScheme;
 
   ThemeMode get themeMode => _themeMode;
+
+  bool get darkIsTrueBlack => _darkIsTrueBlack;
 
   Future<void> loadSettings() async {
     final prefs = await SharedPreferences.getInstance();
@@ -23,6 +26,8 @@ class AppSettings extends ChangeNotifier {
     if (themeModeIndex != null) {
       _themeMode = ThemeMode.values[themeModeIndex];
     }
+
+    _darkIsTrueBlack = prefs.getBool('darkIsTrueBlack') ?? _darkIsTrueBlack;
   }
 
   void setFlexScheme(FlexScheme flexScheme) {
@@ -40,6 +45,15 @@ class AppSettings extends ChangeNotifier {
       notifyListeners();
       SharedPreferences.getInstance().then((prefs) =>
           prefs.setInt('themeMode', _themeMode.index));
+    }
+  }
+
+  void setDarkIsTrueBlack(bool darkIsTrueBlack) {
+    if (_darkIsTrueBlack != darkIsTrueBlack) {
+      _darkIsTrueBlack = darkIsTrueBlack;
+      notifyListeners();
+      SharedPreferences.getInstance().then((prefs) =>
+          prefs.setBool('darkIsTrueBlack', _darkIsTrueBlack));
     }
   }
 }

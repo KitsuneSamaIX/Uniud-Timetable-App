@@ -13,6 +13,7 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
+    final appSettingsProvider = Provider.of<AppSettings>(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Settings'),
@@ -22,6 +23,18 @@ class _SettingsPageState extends State<SettingsPage> {
         children: _separateItems(
           items: [
             const _ThemeSettings(),
+            _SettingsGroup(
+              title: 'Dark Mode',
+              elements: [
+                _SettingsElement(
+                  title: const Text('True Black'),
+                  trailing: Switch(
+                    value: appSettingsProvider.darkIsTrueBlack,
+                    onChanged: (value) => appSettingsProvider.setDarkIsTrueBlack(value),
+                  ),
+                ),
+              ],
+            ),
             _SettingsGroup(
               title: 'Info',
               elements: [

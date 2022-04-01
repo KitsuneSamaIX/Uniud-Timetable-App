@@ -38,9 +38,18 @@ class MaterialAppWithTheme extends StatelessWidget {
       title: 'UNIUD Timetable App',
       theme: FlexThemeData.light(
         scheme: appSettingsProvider.flexScheme,
+        // appBarStyle: FlexAppBarStyle.background,
+        surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
+        blendLevel: 10,
+        useSubThemes: true,
       ),
       darkTheme: FlexThemeData.dark(
+        darkIsTrueBlack: appSettingsProvider.darkIsTrueBlack,
         scheme: appSettingsProvider.flexScheme,
+        // appBarStyle: FlexAppBarStyle.background,
+        surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
+        blendLevel: 5,
+        useSubThemes: true,
       ),
       themeMode: appSettingsProvider.themeMode,
       home: const HomePage(),
