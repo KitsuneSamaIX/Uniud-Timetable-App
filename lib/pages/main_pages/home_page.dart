@@ -102,10 +102,12 @@ class _HomePageState extends State<HomePage> {
           NavigationDestination(
             icon: Icon(Icons.apps),
             label: 'Timetable',
+            tooltip: '',
           ),
           NavigationDestination(
             icon: Icon(Icons.people),
             label: 'Profiles',
+            tooltip: '',
           )
         ],
       ),
