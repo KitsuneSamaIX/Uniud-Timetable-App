@@ -4,8 +4,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AppSettings extends ChangeNotifier {
   // Theme (with defaults)
-  FlexScheme _flexScheme = FlexScheme.material;
-  ThemeMode _themeMode = ThemeMode.system;
+  FlexScheme _flexScheme = FlexScheme.aquaBlue;
+  ThemeMode _themeMode = ThemeMode.dark;
 
   FlexScheme get flexScheme => _flexScheme;
 

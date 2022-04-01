@@ -282,7 +282,7 @@ class _FlexSchemeWrapper {
 /// Ordered list of FlexScheme options to show in settings page.
 const List<_FlexSchemeWrapper> _availableFlexSchemes = [
   _FlexSchemeWrapper(
-    flexScheme: FlexScheme.blumineBlue,
+    flexScheme: FlexScheme.aquaBlue,
     iconColor: Colors.teal,
   ),
   _FlexSchemeWrapper(
@@ -290,15 +290,15 @@ const List<_FlexSchemeWrapper> _availableFlexSchemes = [
     iconColor: Colors.green,
   ),
   _FlexSchemeWrapper(
-    flexScheme: FlexScheme.deepBlue,
+    flexScheme: FlexScheme.blue,
     iconColor: Colors.blue,
   ),
   _FlexSchemeWrapper(
-    flexScheme: FlexScheme.amber,
+    flexScheme: FlexScheme.gold,
     iconColor: Colors.orange,
   ),
   _FlexSchemeWrapper(
-    flexScheme: FlexScheme.red,
+    flexScheme: FlexScheme.redWine,
     iconColor: Colors.red,
   ),
   _FlexSchemeWrapper(
