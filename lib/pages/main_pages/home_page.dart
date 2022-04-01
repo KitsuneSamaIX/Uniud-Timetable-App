@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:bottom_navy_bar/bottom_navy_bar.dart';
 import 'package:animations/animations.dart';
 import 'package:intl/intl.dart';
 import 'package:uniud_timetable_app/pages/settings_page.dart';
@@ -88,32 +87,6 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      // bottomNavigationBar: BottomNavyBar(
-      //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-      //   selectedIndex: _selectedIndex,
-      //   showElevation: true,
-      //   animationDuration: const Duration(milliseconds: 250),
-      //   onItemSelected: (index) => setState(() {
-      //     _selectedIndex = index;
-      //     _pageController.animateToPage(
-      //       index,
-      //       duration: const Duration(milliseconds: 250),
-      //       curve: Curves.easeOutCubic,
-      //     );
-      //   }),
-      //   items: [
-      //     BottomNavyBarItem(
-      //       icon: const Icon(Icons.apps),
-      //       title: const Text('Timetable'),
-      //       activeColor: Theme.of(context).primaryColor,
-      //     ),
-      //     BottomNavyBarItem(
-      //       icon: const Icon(Icons.people),
-      //       title: const Text('Profiles'),
-      //       activeColor: Theme.of(context).primaryColor,
-      //     ),
-      //   ],
-      // ),
       bottomNavigationBar: NavigationBar(
         labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
         selectedIndex: _selectedIndex,
