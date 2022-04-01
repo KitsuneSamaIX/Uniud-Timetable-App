@@ -69,6 +69,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       appBar: AppBar(
+        elevation: 0,
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         titleSpacing: 0,
         toolbarHeight: 80,
@@ -179,7 +180,7 @@ class _TodayHeading extends StatelessWidget {
             'Today',
             style: TextStyle(
               color: Theme.of(context).colorScheme.secondary,
-              fontSize: 18,
+              fontSize: 20,
             ),
           ),
           const SizedBox(height: 5,),
@@ -188,7 +189,7 @@ class _TodayHeading extends StatelessWidget {
             style: TextStyle(
               color: Theme.of(context).colorScheme.primary,
               fontWeight: FontWeight.bold,
-              fontSize: 22,
+              fontSize: 24,
             ),
           ),
         ],
@@ -218,14 +219,14 @@ class _SettingsOpenContainer extends StatelessWidget {
       ),
       closedColor: Colors.transparent,
       closedBuilder: (BuildContext context, VoidCallback openContainer) {
-        return const SizedBox(
-          height: _dimension,
-          width: _dimension,
+        return SizedBox(
+          height: _dimension + 8,
+          width: _dimension + 8,
           child: Center(
             child: Icon(
               Icons.settings,
-              size: 32,
-              color: Colors.grey,
+              size: _dimension,
+              color: Theme.of(context).colorScheme.secondary,
             ),
           ),
         );

@@ -1,7 +1,7 @@
-import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uniud_timetable_app/pages/main_pages/home_page.dart';
+import 'package:uniud_timetable_app/pages/settings_page.dart';
 import 'package:uniud_timetable_app/utilities/app_settings.dart';
 
 void main() async {
@@ -36,20 +36,21 @@ class MaterialAppWithTheme extends StatelessWidget {
     final appSettingsProvider = Provider.of<AppSettings>(context);
     return MaterialApp(
       title: 'UNIUD Timetable App',
-      theme: FlexThemeData.light(
-        scheme: appSettingsProvider.flexScheme,
-        // appBarStyle: FlexAppBarStyle.background,
-        surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
-        blendLevel: 10,
-        useSubThemes: true,
+      theme: ThemeData(
+        brightness: Brightness.light,
+        colorSchemeSeed: appSettingsProvider.appKeyColor.toColor(),
       ),
-      darkTheme: FlexThemeData.dark(
-        darkIsTrueBlack: appSettingsProvider.darkIsTrueBlack,
-        scheme: appSettingsProvider.flexScheme,
-        // appBarStyle: FlexAppBarStyle.background,
-        surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
-        blendLevel: 5,
-        useSubThemes: true,
+      darkTheme: appSettingsProvider.darkIsTrueBlack ? ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+            brightness: Brightness.dark,
+            seedColor: appSettingsProvider.appKeyColor.toColor(),
+            surface: Colors.black,
+            background: Colors.black
+        ),
+        scaffoldBackgroundColor: Colors.black,
+      ) : ThemeData(
+        brightness: Brightness.dark,
+        colorSchemeSeed: appSettingsProvider.appKeyColor.toColor(),
       ),
       themeMode: appSettingsProvider.themeMode,
       home: const HomePage(),

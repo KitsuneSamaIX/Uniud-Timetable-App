@@ -1,4 +1,3 @@
-import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uniud_timetable_app/utilities/app_settings.dart';
@@ -138,9 +137,9 @@ class _ThemeSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final separatedFlexSchemes = _separateItems(
-      items: List.generate(_availableFlexSchemes.length, (index) =>
-          _FlexSchemeOption(flexSchemeWrapper: _availableFlexSchemes[index])
+    final separatedAppKeyColors = _separateItems(
+      items: List.generate(AppKeyColor.values.length, (index) =>
+          _AppKeyColorOption(appKeyColor: AppKeyColor.values[index])
       ),
       separator: const Spacer(),
     );
@@ -160,7 +159,7 @@ class _ThemeSettings extends StatelessWidget {
           children: [
             Row(children: separatedThemeModeOptions,),
             const SizedBox(height: 16,),
-            Row(children: separatedFlexSchemes,),
+            Row(children: separatedAppKeyColors,),
           ],
         ),
       ],
@@ -205,28 +204,28 @@ class _ThemeModeOption extends StatelessWidget {
   }
 }
 
-class _FlexSchemeOption extends StatelessWidget {
-  final _FlexSchemeWrapper flexSchemeWrapper;
+class _AppKeyColorOption extends StatelessWidget {
+  final AppKeyColor appKeyColor;
 
-  const _FlexSchemeOption({Key? key, required this.flexSchemeWrapper})
+  const _AppKeyColorOption({Key? key, required this.appKeyColor})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final appSettingsProvider = Provider.of<AppSettings>(context);
-    final selected = appSettingsProvider.flexScheme == flexSchemeWrapper.flexScheme ? true : false;
+    final selected = appSettingsProvider.appKeyColor == appKeyColor ? true : false;
     return Expanded(
       flex: 10,
       child: LayoutBuilder(
         builder: (context, constraints) {
           return GestureDetector(
-            onTap: () => appSettingsProvider.setFlexScheme(flexSchemeWrapper.flexScheme),
+            onTap: () => appSettingsProvider.setAppKeyColor(appKeyColor),
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 250),
               width: constraints.maxWidth,
               height: constraints.maxWidth,
               decoration: BoxDecoration(
-                color: flexSchemeWrapper.iconColor,
+                color: appKeyColor.toColor(),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: selected ? const Icon(Icons.circle) : null,
@@ -282,40 +281,31 @@ const List<_ThemeModeWrapper> _availableThemeModes = [
   ),
 ];
 
-class _FlexSchemeWrapper {
-  final FlexScheme flexScheme;
-  final Color iconColor;
-
-  const _FlexSchemeWrapper({
-    required this.flexScheme,
-    required this.iconColor
-  });
+/// Key Colors to show on theme settings.
+enum AppKeyColor {
+  teal,
+  green,
+  blue,
+  orange,
+  red,
+  purple,
 }
 
-/// Ordered list of FlexScheme options to show in settings page.
-const List<_FlexSchemeWrapper> _availableFlexSchemes = [
-  _FlexSchemeWrapper(
-    flexScheme: FlexScheme.aquaBlue,
-    iconColor: Colors.teal,
-  ),
-  _FlexSchemeWrapper(
-    flexScheme: FlexScheme.green,
-    iconColor: Colors.green,
-  ),
-  _FlexSchemeWrapper(
-    flexScheme: FlexScheme.blue,
-    iconColor: Colors.blue,
-  ),
-  _FlexSchemeWrapper(
-    flexScheme: FlexScheme.gold,
-    iconColor: Colors.orange,
-  ),
-  _FlexSchemeWrapper(
-    flexScheme: FlexScheme.redWine,
-    iconColor: Colors.red,
-  ),
-  _FlexSchemeWrapper(
-    flexScheme: FlexScheme.deepPurple,
-    iconColor: Colors.purple,
-  ),
-];
+extension ToColor on AppKeyColor {
+  Color toColor() {
+    switch (this) {
+      case AppKeyColor.teal:
+        return Colors.teal;
+      case AppKeyColor.green:
+        return Colors.green;
+      case AppKeyColor.blue:
+        return Colors.blue;
+      case AppKeyColor.orange:
+        return Colors.orange;
+      case AppKeyColor.red:
+        return Colors.red;
+      case AppKeyColor.purple:
+        return Colors.purple;
+    }
+  }
+}
