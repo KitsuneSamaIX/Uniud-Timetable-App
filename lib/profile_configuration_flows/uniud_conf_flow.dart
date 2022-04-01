@@ -337,16 +337,16 @@ class _ConnectionErrorMessage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
         child: Column(
-          children: const <Widget>[
+          children: <Widget>[
             Padding(
-              padding: EdgeInsets.only(top: 32, bottom: 16),
+              padding: const EdgeInsets.only(top: 32, bottom: 16),
               child: Icon(
                 Icons.warning_amber_rounded,
                 size: 64,
-                color: Colors.orange,
+                color: Theme.of(context).colorScheme.error,
               ),
             ),
-            Padding(
+            const Padding(
               padding: EdgeInsets.only(left: 32, right: 32),
               child: Text(
                 'An error has occurred while loading data from UNIUD '
