@@ -1,37 +1,34 @@
 import 'package:test/test.dart';
 import 'package:uniud_timetable_app/apis/uniud_timetable_api.dart';
-import 'package:xml/xml.dart';
 
 void main() {
   Map<String, dynamic> rememberSelection = {};
 
   test("Retrieve the degrees index from Uniud's API.", () async {
-    final api = UniudTimetableAPI();
+    var degreesRawIndex = await UniudTimetableAPI.getDegreesRawIndex();
 
-    var degreesRawIndex = await api.getDegreesRawIndex();
-
-    var departments = api.getDepartments(degreesRawIndex);
+    var departments = UniudTimetableAPI.getDepartments(degreesRawIndex);
 
     for (final department in departments) {
       print(department.name);
 
       if (department.name == 'Dipartimento di Scienze Matematiche, Informatiche e Fisiche') {
         print('');
-        var degreeTypes = api.getDegreeTypes(department);
+        var degreeTypes = UniudTimetableAPI.getDegreeTypes(department);
 
         for (final degreeType in degreeTypes) {
           print(degreeType.name);
 
           if (degreeType.name == 'Laurea') {
             print('');
-            var degrees = api.getDegrees(degreeType);
+            var degrees = UniudTimetableAPI.getDegrees(degreeType);
 
             for (final degree in degrees) {
               print(degree.name);
 
               if (degree.name == 'INFORMATICA') {
                 print('');
-                var periods = api.getPeriods(degree);
+                var periods = UniudTimetableAPI.getPeriods(degree);
 
                 for (final period in periods) {
                   print(period.name);
@@ -50,10 +47,8 @@ void main() {
   });
 
   test("Retrieve a degree course from Uniud's API.", () async {
-    final api = UniudTimetableAPI();
-
     var courseDescriptors =
-      await api.getCourseDescriptors(
+      await UniudTimetableAPI.getCourseDescriptors(
         rememberSelection['degree'] as Degree,
         rememberSelection['period'] as Period
       );
@@ -68,10 +63,8 @@ void main() {
   });
 
   test("Retrieve a course info from Uniud's API.", () async {
-    final api = UniudTimetableAPI();
-
     var course =
-      await api.getCourse(
+      await UniudTimetableAPI.getCourse(
         // CourseDescriptor(
         //     'Name placeholder',
         //     '0',

@@ -1,19 +1,28 @@
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uniud_timetable_app/pages/main_pages/home_page.dart';
-import 'package:uniud_timetable_app/utilities/app_theme_changer.dart';
+import 'package:uniud_timetable_app/utilities/app_settings.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Load app settings
+  final appSettings = AppSettings();
+  await appSettings.loadSettings();
+
+  runApp(MyApp(appSettings: appSettings,));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  final AppSettings appSettings;
+
+  const MyApp({Key? key, required this.appSettings}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => AppThemeModel(),
+    return ChangeNotifierProvider.value(
+      value: appSettings,
       child: const MaterialAppWithTheme(),
     );
   }
@@ -24,18 +33,16 @@ class MaterialAppWithTheme extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<AppThemeModel>(context);
+    final appSettingsProvider = Provider.of<AppSettings>(context);
     return MaterialApp(
       title: 'UNIUD Timetable App',
-      theme: ThemeData(
-        brightness: Brightness.light,
-        colorSchemeSeed: themeProvider.colorSchemeSeed,
+      theme: FlexThemeData.light(
+        scheme: appSettingsProvider.flexScheme,
       ),
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        colorSchemeSeed: themeProvider.colorSchemeSeed,
+      darkTheme: FlexThemeData.dark(
+        scheme: appSettingsProvider.flexScheme,
       ),
-      themeMode: themeProvider.themeMode,
+      themeMode: appSettingsProvider.themeMode,
       home: const HomePage(),
     );
   }

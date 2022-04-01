@@ -1,6 +1,7 @@
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:uniud_timetable_app/utilities/app_theme_changer.dart';
+import 'package:uniud_timetable_app/utilities/app_settings.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -124,16 +125,16 @@ class _ThemeSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Generate the rows with the options
-    final separatedAppThemeModeOptions = _separateItems(
-      items: List.generate(_appThemeModes.length, (index) =>
-          _ThemeModeOption(appThemeMode: _appThemeModes[index])
+    final separatedFlexSchemes = _separateItems(
+      items: List.generate(_availableFlexSchemes.length, (index) =>
+          _FlexSchemeOption(flexSchemeWrapper: _availableFlexSchemes[index])
       ),
       separator: const Spacer(),
     );
-    final separatedAppColorSchemeSeeds = _separateItems(
-      items: List.generate(_appColorSchemeSeeds.length, (index) =>
-          _ColorSchemeSeedOption(appColorSchemeSeed: _appColorSchemeSeeds[index])
+    // Generate the rows with the options
+    final separatedThemeModeOptions = _separateItems(
+      items: List.generate(_availableThemeModes.length, (index) =>
+          _ThemeModeOption(themeModeWrapper: _availableThemeModes[index])
       ),
       separator: const Spacer(),
     );
@@ -144,9 +145,9 @@ class _ThemeSettings extends StatelessWidget {
         const _GroupHeading(title: 'Theme',),
         Column(
           children: [
-            Row(children: separatedAppThemeModeOptions,),
+            Row(children: separatedThemeModeOptions,),
             const SizedBox(height: 16,),
-            Row(children: separatedAppColorSchemeSeeds,),
+            Row(children: separatedFlexSchemes,),
           ],
         ),
       ],
@@ -155,21 +156,21 @@ class _ThemeSettings extends StatelessWidget {
 }
 
 class _ThemeModeOption extends StatelessWidget {
-  final _AppThemeMode appThemeMode;
+  final _ThemeModeWrapper themeModeWrapper;
 
-  const _ThemeModeOption({Key? key, required this.appThemeMode})
+  const _ThemeModeOption({Key? key, required this.themeModeWrapper})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<AppThemeModel>(context);
-    final selected = themeProvider.themeMode == appThemeMode.mode ? true : false;
+    final appSettingsProvider = Provider.of<AppSettings>(context);
+    final selected = appSettingsProvider.themeMode == themeModeWrapper.mode ? true : false;
     return Expanded(
       flex: 10,
       child: LayoutBuilder(
         builder: (context, constraints) {
           return GestureDetector(
-            onTap: () => themeProvider.setThemeMode(appThemeMode.mode),
+            onTap: () => appSettingsProvider.setThemeMode(themeModeWrapper.mode),
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 250),
               width: constraints.maxWidth,
@@ -182,7 +183,7 @@ class _ThemeModeOption extends StatelessWidget {
                   width: 3,
                 ),
               ),
-              child: Icon(appThemeMode.icon),
+              child: Icon(themeModeWrapper.icon),
             ),
           );
         },
@@ -191,28 +192,28 @@ class _ThemeModeOption extends StatelessWidget {
   }
 }
 
-class _ColorSchemeSeedOption extends StatelessWidget {
-  final MaterialColor appColorSchemeSeed;
+class _FlexSchemeOption extends StatelessWidget {
+  final _FlexSchemeWrapper flexSchemeWrapper;
 
-  const _ColorSchemeSeedOption({Key? key, required this.appColorSchemeSeed})
+  const _FlexSchemeOption({Key? key, required this.flexSchemeWrapper})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<AppThemeModel>(context);
-    final selected = themeProvider.colorSchemeSeed == appColorSchemeSeed ? true : false;
+    final appSettingsProvider = Provider.of<AppSettings>(context);
+    final selected = appSettingsProvider.flexScheme == flexSchemeWrapper.flexScheme ? true : false;
     return Expanded(
       flex: 10,
       child: LayoutBuilder(
         builder: (context, constraints) {
           return GestureDetector(
-            onTap: () => themeProvider.setColorSchemeSeed(appColorSchemeSeed),
+            onTap: () => appSettingsProvider.setFlexScheme(flexSchemeWrapper.flexScheme),
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 250),
               width: constraints.maxWidth,
               height: constraints.maxWidth,
               decoration: BoxDecoration(
-                color: appColorSchemeSeed,
+                color: flexSchemeWrapper.iconColor,
                 borderRadius: BorderRadius.circular(16),
               ),
               child: selected ? const Icon(Icons.circle) : null,
@@ -237,41 +238,71 @@ List<Widget> _separateItems({required List<Widget> items, required Widget separa
   return separatedItems;
 }
 
-class _AppThemeMode {
+class _ThemeModeWrapper {
   final ThemeMode mode;
   final String title;
   final IconData icon;
 
-  const _AppThemeMode({
+  const _ThemeModeWrapper({
     required this.mode,
     required this.title,
     required this.icon,
   });
 }
 
-const List<_AppThemeMode> _appThemeModes = [
-  _AppThemeMode(
+/// Ordered list of ThemeMode options to show in settings page.
+const List<_ThemeModeWrapper> _availableThemeModes = [
+  _ThemeModeWrapper(
     mode: ThemeMode.light,
     title: 'Light',
     icon: Icons.brightness_5_rounded,
   ),
-  _AppThemeMode(
+  _ThemeModeWrapper(
     mode: ThemeMode.dark,
     title: 'Dark',
     icon: Icons.brightness_2_rounded,
   ),
-  _AppThemeMode(
+  _ThemeModeWrapper(
     mode: ThemeMode.system,
     title: 'Auto',
     icon: Icons.brightness_4_rounded,
   ),
 ];
 
-const List<MaterialColor> _appColorSchemeSeeds = [
-  Colors.teal,
-  Colors.green,
-  Colors.blue,
-  Colors.orange,
-  Colors.red,
-  Colors.purple,
+class _FlexSchemeWrapper {
+  final FlexScheme flexScheme;
+  final Color iconColor;
+
+  const _FlexSchemeWrapper({
+    required this.flexScheme,
+    required this.iconColor
+  });
+}
+
+/// Ordered list of FlexScheme options to show in settings page.
+const List<_FlexSchemeWrapper> _availableFlexSchemes = [
+  _FlexSchemeWrapper(
+    flexScheme: FlexScheme.blumineBlue,
+    iconColor: Colors.teal,
+  ),
+  _FlexSchemeWrapper(
+    flexScheme: FlexScheme.green,
+    iconColor: Colors.green,
+  ),
+  _FlexSchemeWrapper(
+    flexScheme: FlexScheme.deepBlue,
+    iconColor: Colors.blue,
+  ),
+  _FlexSchemeWrapper(
+    flexScheme: FlexScheme.amber,
+    iconColor: Colors.orange,
+  ),
+  _FlexSchemeWrapper(
+    flexScheme: FlexScheme.red,
+    iconColor: Colors.red,
+  ),
+  _FlexSchemeWrapper(
+    flexScheme: FlexScheme.deepPurple,
+    iconColor: Colors.purple,
+  ),
 ];

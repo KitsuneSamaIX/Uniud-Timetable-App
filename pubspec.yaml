@@ -40,9 +40,10 @@ dependencies:
   bottom_navy_bar: ^6.0.0
   intl: ^0.17.0
   calendar_timeline: ^1.0.4
-  shared_preferences: ^0.5.5
+  shared_preferences: ^2.0.13
   provider: ^6.0.2
   scrollable_positioned_list: ^0.2.3
+  flex_color_scheme: ^4.2.0
 
 dev_dependencies:
   flutter_test:
