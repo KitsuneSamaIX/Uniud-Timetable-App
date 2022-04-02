@@ -222,14 +222,25 @@ class UniudTimetableAPI {
 }
 
 class Profile {
+  final String name;
   final String departmentName;
   final String degreeTypeName;
   final String degreeName;
   final String periodName;
-  final List<Course> courses;
+  final Set<Course> courses;
 
-  Profile(this.departmentName, this.degreeTypeName, this.degreeName,
+  Profile(this.name, this.departmentName, this.degreeTypeName, this.degreeName,
       this.periodName, this.courses);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Profile &&
+          runtimeType == other.runtimeType &&
+          name == other.name;
+
+  @override
+  int get hashCode => name.hashCode;
 }
 
 class DegreesRawIndex {
@@ -278,18 +289,14 @@ class CourseDescriptor {
   CourseDescriptor(this.name, this.professor, this.credits, this.fileId);
 
   @override
-  int get hashCode {
-    return fileId.hashCode;
-  }
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CourseDescriptor &&
+          runtimeType == other.runtimeType &&
+          fileId == other.fileId;
 
   @override
-  bool operator ==(Object other) {
-    if (other is CourseDescriptor) {
-      return fileId == other.fileId;
-    } else {
-      return false;
-    }
-  }
+  int get hashCode => fileId.hashCode;
 }
 
 class Course {
@@ -299,6 +306,18 @@ class Course {
   final List<CourseLesson> lessons;
 
   Course(this.name, this.credits, this.professor, this.lessons);
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Course &&
+          runtimeType == other.runtimeType &&
+          name == other.name &&
+          credits == other.credits &&
+          professor == other.professor;
+
+  @override
+  int get hashCode => name.hashCode ^ credits.hashCode ^ professor.hashCode;
 }
 
 class CourseLesson {
