@@ -402,9 +402,9 @@ class _ProfileNamePageState extends State<ProfileNamePage> {
                   // TODO check here if there are other profiles with the same name, if there are return null (which means invalid) on this function
                   // TODO remember to remove the trailing whitespaces before checking the name (and also before saving the name)
                   if (value == null || value.isEmpty) {
-                    return 'PLease set a profile name.';
+                    return 'Please set a profile name.';
                   } else if (value.contains('a')) { // TODO remove this test
-                    return 'test validation!';
+                    return 'Test validation!';
                   } else {
                     return null;
                   }
