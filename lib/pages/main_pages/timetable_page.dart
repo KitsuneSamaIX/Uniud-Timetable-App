@@ -1,5 +1,6 @@
 import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class TimetablePage extends StatefulWidget {
   const TimetablePage({Key? key}) : super(key: key);
@@ -9,23 +10,20 @@ class TimetablePage extends StatefulWidget {
 }
 
 class _TimetablePageState extends State<TimetablePage> {
-  late DateTime _selectedDay;
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedDay = DateTime.now();
-  }
-
   @override
   Widget build(BuildContext context) {
+    var selectedDayProvider = Provider.of<ValueNotifier<DateTime>>(context);
     return Column(
       children: [
         CalendarTimeline(
-          initialDate: _selectedDay,
+          initialDate: selectedDayProvider.value,
           firstDate: DateTime.now().subtract(const Duration(days: 365)),
           lastDate: DateTime.now().add(const Duration(days: 365)),
-          onDateSelected: (dateTime) {}, // TODO onDateSelected callback
+          onDateSelected: (dateTime) {
+            if (dateTime != null) {
+              selectedDayProvider.value = dateTime;
+            }
+          }, // TODO onDateSelected change the timetabled displayed
           leftMargin: 60,
           monthColor: Theme.of(context).colorScheme.secondary,
           dayColor: Theme.of(context).colorScheme.secondary,
@@ -42,9 +40,7 @@ class _TimetablePageState extends State<TimetablePage> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              onPressed: () => setState(() {
-                _selectedDay = DateTime.now();
-              }),
+              onPressed: () => selectedDayProvider.value = DateTime.now(),
             ),
           ),
         ),

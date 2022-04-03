@@ -514,10 +514,3 @@ class _LoadingScreen extends StatelessWidget {
     );
   }
 }
-
-class _ProfileInfo { // TODO pass this class and fill its fields during course selection, it will be later used to initialize the Profile class
-  String? departmentName;
-  String? degreeTypeName;
-  String? degreeName;
-  String? periodName;
-}

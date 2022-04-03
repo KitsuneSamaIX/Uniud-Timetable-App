@@ -243,6 +243,60 @@ class Profile {
   int get hashCode => name.hashCode;
 }
 
+class ProfileBuilder {
+  String? _name;
+  String? _departmentName;
+  String? _degreeTypeName;
+  String? _degreeName;
+  String? _periodName;
+  final Set<Course> _courses = {};
+
+  ProfileBuilder name(String name) {
+    _name = name;
+    return this;
+  }
+
+  ProfileBuilder departmentName(String departmentName) {
+    _departmentName = departmentName;
+    return this;
+  }
+
+  ProfileBuilder degreeTypeName(String degreeTypeName) {
+    _degreeTypeName = degreeTypeName;
+    return this;
+  }
+
+  ProfileBuilder degreeName(String degreeName) {
+    _degreeName = degreeName;
+    return this;
+  }
+
+  ProfileBuilder periodName(String periodName) {
+    _periodName = periodName;
+    return this;
+  }
+
+  ProfileBuilder addCourse(Course course) {
+    _courses.add(course);
+    return this;
+  }
+  
+  Profile build() {
+    try {
+      return Profile(
+        _name!,
+        _departmentName!,
+        _degreeTypeName!,
+        _degreeName!,
+        _periodName!,
+        _courses,
+      );
+    } catch(e) {
+      throw StateError('The object cannot be built in the current state: $e');
+    }
+  }
+}
+
 class DegreesRawIndex {
   final dynamic index;
 

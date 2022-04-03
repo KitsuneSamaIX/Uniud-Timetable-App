@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:animations/animations.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:uniud_timetable_app/pages/settings_page.dart';
 import 'package:uniud_timetable_app/pages/main_pages/timetable_page.dart';
 import 'package:uniud_timetable_app/pages/main_pages/profiles_page.dart';
@@ -15,12 +16,18 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   // Navigation bar
-  int _selectedIndex = 0;
+  int _selectedPageIndex = 0;
   final PageController _pageController = PageController();
 
   // Floating Action Button
   bool _addProfileButtonVisible = false;
   static const double _fabDimension = 56.0;
+
+  // Headings
+  final _pageHeadings = ['Timetable', 'Profiles'];
+
+  // Timetable page
+  final _selectedDayNotifier = ValueNotifier(DateTime.now());
 
   @override
   void dispose() {
@@ -75,8 +82,8 @@ class _HomePageState extends State<HomePage> {
         title: Row(
           children: [
             Expanded(
-              child: _TodayHeading(
-                date: DateTime.now(),
+              child: _Heading(
+                title: _pageHeadings[_selectedPageIndex],
                 padding: const EdgeInsets.all(16),
               ),
             ),
@@ -89,14 +96,10 @@ class _HomePageState extends State<HomePage> {
       ),
       bottomNavigationBar: NavigationBar(
         labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-        selectedIndex: _selectedIndex,
+        selectedIndex: _selectedPageIndex,
         onDestinationSelected: (index) => setState(() {
-          _selectedIndex = index;
-          _pageController.animateToPage(
-            index,
-            duration: const Duration(milliseconds: 250),
-            curve: Curves.easeOutCubic,
-          );
+          _selectedPageIndex = index;
+          _pageController.jumpToPage(index);
         }),
         destinations: const [
           NavigationDestination(
@@ -115,17 +118,46 @@ class _HomePageState extends State<HomePage> {
         physics: const NeverScrollableScrollPhysics(),
         controller: _pageController,
         onPageChanged: (index) => setState(() {
-          _selectedIndex = index;
+          _selectedPageIndex = index;
           if (index == 1) {
             _addProfileButtonVisible = true;
           } else {
             _addProfileButtonVisible = false;
           }
         }),
-        children: const [
-          TimetablePage(),
-          ProfilesPage(),
+        children: [
+          ChangeNotifierProvider.value(
+            value: _selectedDayNotifier,
+            child: const TimetablePage(),
+          ),
+          const ProfilesPage(),
         ],
+      ),
+    );
+  }
+}
+
+class _Heading extends StatelessWidget {
+  final String title;
+  final EdgeInsetsGeometry padding;
+
+  const _Heading({Key? key, required this.title, required this.padding})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: padding,
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          title,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.primary,
+            fontWeight: FontWeight.bold,
+            fontSize: 28,
+          ),
+        ),
       ),
     );
   }

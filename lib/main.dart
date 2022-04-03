@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:uniud_timetable_app/pages/main_pages/home_page.dart';
 import 'package:uniud_timetable_app/pages/settings_page.dart';
 import 'package:uniud_timetable_app/utilities/app_settings.dart';
+import 'package:uniud_timetable_app/utilities/profiles.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -11,18 +12,30 @@ void main() async {
   final appSettings = AppSettings();
   await appSettings.loadSettings();
 
-  runApp(MyApp(appSettings: appSettings,));
+  // Load profiles
+  final profiles = Profiles();
+  // TODO load profiles from disk (this operation will be an async one for sure).
+
+  runApp(MyApp(appSettings: appSettings, profiles: profiles,));
 }
 
 class MyApp extends StatelessWidget {
   final AppSettings appSettings;
+  final Profiles profiles;
 
-  const MyApp({Key? key, required this.appSettings}) : super(key: key);
+  const MyApp({
+    Key? key,
+    required this.appSettings,
+    required this.profiles,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
-      value: appSettings,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: appSettings),
+        ChangeNotifierProvider.value(value: profiles),
+      ],
       child: const MaterialAppWithTheme(),
     );
   }
