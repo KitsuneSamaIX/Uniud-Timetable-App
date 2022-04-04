@@ -15,7 +15,7 @@ class DepartmentSelectionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('New Profile'),
+        title: const Text('Select your Department'),
       ),
       body: FutureBuilder(
         future: UniudTimetableAPI.getDegreesRawIndex(),
@@ -429,19 +429,24 @@ class _CustomListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTileTheme(
-      data: ListTileThemeData(
-        tileColor: Theme.of(context).colorScheme.primaryContainer,
-        textColor: Theme.of(context).colorScheme.onPrimaryContainer,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
+    return IconTheme(
+      data: IconThemeData(
+        color: Theme.of(context).colorScheme.onPrimaryContainer,
       ),
-      child: ListView.separated(
-        padding: const EdgeInsets.all(16),
-        itemCount: itemCount,
-        separatorBuilder: (context, index) => const SizedBox(height: 16,),
-        itemBuilder: itemBuilder,
+      child: ListTileTheme(
+        data: ListTileThemeData(
+          tileColor: Theme.of(context).colorScheme.primaryContainer,
+          textColor: Theme.of(context).colorScheme.onPrimaryContainer,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+        ),
+        child: ListView.separated(
+          padding: const EdgeInsets.all(16),
+          itemCount: itemCount,
+          separatorBuilder: (context, index) => const SizedBox(height: 16,),
+          itemBuilder: itemBuilder,
+        ),
       ),
     );
   }
