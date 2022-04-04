@@ -4,6 +4,8 @@ import 'package:provider/provider.dart';
 import 'package:uniud_timetable_app/apis/uniud_timetable_api.dart';
 import 'package:uniud_timetable_app/utilities/profiles.dart';
 
+// PROFILE CONFIGURATION FLOW
+
 class DepartmentSelectionPage extends StatelessWidget {
   final ProfileBuilder profileBuilder = ProfileBuilder();
 
@@ -20,16 +22,10 @@ class DepartmentSelectionPage extends StatelessWidget {
         builder: (BuildContext context, AsyncSnapshot<DegreesRawIndex> snapshot) {
           if (snapshot.hasData) {
             final deparments = UniudTimetableAPI.getDepartments(snapshot.data!);
-            return ListView.separated(
-              padding: const EdgeInsets.all(16),
+            return _CustomListView(
               itemCount: deparments.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 16,),
               itemBuilder: (context, index) {
                 return ListTile(
-                  tileColor: Theme.of(context).colorScheme.primaryContainer,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
                   title: Text(
                     deparments[index].name,
                   ),
@@ -73,16 +69,10 @@ class DegreeTypeSelectionPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Select your Degree Type'),
       ),
-      body: ListView.separated(
-        padding: const EdgeInsets.all(16),
+      body: _CustomListView(
         itemCount: degreeTypes.length,
-        separatorBuilder: (context, index) => const SizedBox(height: 16,),
         itemBuilder: (context, index) {
           return ListTile(
-            tileColor: Theme.of(context).colorScheme.primaryContainer,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
             title: Text(
               degreeTypes[index].name,
             ),
@@ -119,16 +109,10 @@ class DegreeSelectionPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Select your Degree'),
       ),
-      body: ListView.separated(
-        padding: const EdgeInsets.all(16),
+      body: _CustomListView(
         itemCount: degrees.length,
-        separatorBuilder: (context, index) => const SizedBox(height: 16,),
         itemBuilder: (context, index) {
           return ListTile(
-            tileColor: Theme.of(context).colorScheme.primaryContainer,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
             title: Text(
               degrees[index].name,
             ),
@@ -165,16 +149,10 @@ class PeriodSelectionPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Select the Period'),
       ),
-      body: ListView.separated(
-        padding: const EdgeInsets.all(16),
+      body: _CustomListView(
         itemCount: periods.length,
-        separatorBuilder: (context, index) => const SizedBox(height: 16,),
         itemBuilder: (context, index) {
           return ListTile(
-            tileColor: Theme.of(context).colorScheme.primaryContainer,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
             title: Text(
               periods[index].name,
             ),
@@ -250,20 +228,14 @@ class _CourseSelectionPageState extends State<CourseSelectionPage> {
             widget.profileBuilder.degree!, widget.profileBuilder.period!),
         builder: (BuildContext context, AsyncSnapshot<List<CourseDescriptor>> snapshot) {
           if (snapshot.hasData) {
-            final courses = snapshot.data!;
-            return ListView.separated(
-              padding: const EdgeInsets.all(16),
-              itemCount: courses.length,
-              separatorBuilder: (context, index) => const SizedBox(height: 16,),
+            final courseDescriptors = snapshot.data!;
+            return _CustomListView(
+              itemCount: courseDescriptors.length,
               itemBuilder: (context, index) {
                 return CheckboxListTile(
                   contentPadding: const EdgeInsets.symmetric(
                     vertical: 8,
                     horizontal: 4,
-                  ),
-                  tileColor: Theme.of(context).colorScheme.primaryContainer,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
                   ),
                   title: Row(
                     children: [
@@ -271,7 +243,7 @@ class _CourseSelectionPageState extends State<CourseSelectionPage> {
                         onPressed: () => showDialog<String>(
                           context: context,
                           builder: (BuildContext context) => AlertDialog(
-                            title: Text(courses[index].name),
+                            title: Text(courseDescriptors[index].name),
                             // content: const Text('AlertDialog description'),
                             actions: <Widget>[
                               TextButton(
@@ -289,7 +261,7 @@ class _CourseSelectionPageState extends State<CourseSelectionPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              courses[index].name,
+                              courseDescriptors[index].name,
                               maxLines: 1,
                               softWrap: false,
                               overflow: TextOverflow.fade,
@@ -299,7 +271,7 @@ class _CourseSelectionPageState extends State<CourseSelectionPage> {
                               ),
                             ),
                             Text(
-                              '${courses[index].credits} CFU',
+                              '${courseDescriptors[index].credits} CFU',
                               maxLines: 1,
                               softWrap: false,
                               overflow: TextOverflow.fade,
@@ -308,7 +280,7 @@ class _CourseSelectionPageState extends State<CourseSelectionPage> {
                               ),
                             ),
                             Text(
-                              courses[index].professor != '' ? 'Prof. ${courses[index].professor}' : '',
+                              courseDescriptors[index].professor != '' ? 'Prof. ${courseDescriptors[index].professor}' : '',
                               maxLines: 1,
                               softWrap: false,
                               overflow: TextOverflow.fade,
@@ -321,13 +293,13 @@ class _CourseSelectionPageState extends State<CourseSelectionPage> {
                       ),
                     ],
                   ),
-                  value: _selectedCourses.contains(courses[index]),
+                  value: _selectedCourses.contains(courseDescriptors[index]),
                   onChanged: (value) {
                     setState(() {
                       if (value ?? false) {
-                        _selectedCourses.add(courses[index]);
+                        _selectedCourses.add(courseDescriptors[index]);
                       } else {
-                        _selectedCourses.remove(courses[index]);
+                        _selectedCourses.remove(courseDescriptors[index]);
                       }
                     });
                   },
@@ -444,6 +416,52 @@ class _ProfileNamePageState extends State<ProfileNamePage> {
 }
 
 // COMMON
+
+class _CustomListView extends StatelessWidget {
+  final int itemCount;
+  final Widget Function(BuildContext context, int index) itemBuilder;
+
+  const _CustomListView({
+    Key? key,
+    required this.itemCount,
+    required this.itemBuilder,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return _CustomListTileTheme(
+      child: ListView.separated(
+        padding: const EdgeInsets.all(16),
+        itemCount: itemCount,
+        separatorBuilder: (context, index) => const SizedBox(height: 16,),
+        itemBuilder: itemBuilder,
+      ),
+    );
+  }
+}
+
+class _CustomListTileTheme extends StatelessWidget {
+  final Widget child;
+
+  const _CustomListTileTheme({
+    Key? key,
+    required this.child,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTileTheme(
+      data: ListTileThemeData(
+        tileColor: Theme.of(context).colorScheme.primaryContainer,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+      ),
+      child: child,
+    );
+  }
+}
+
 
 class _ConnectionErrorMessage extends StatelessWidget {
   const _ConnectionErrorMessage({Key? key}) : super(key: key);

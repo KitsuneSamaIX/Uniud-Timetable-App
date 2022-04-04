@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:xml/xml.dart';
 
@@ -164,7 +162,7 @@ class UniudTimetableAPI {
           // Parse the date
           final rawDate = child.getAttribute('Data')!;
           final rawDateComps = rawDate.split('-');
-          final lessonDate = DateTime(
+          final date = DateTime(
               int.parse(rawDateComps[2]),
               int.parse(rawDateComps[1]),
               int.parse(rawDateComps[0])
@@ -174,21 +172,27 @@ class UniudTimetableAPI {
           final rawStartTimeComps = rawStartTime.split(':');
           final rawEndTime = child.getAttribute('OraFine')!;
           final rawEndTimeComps = rawEndTime.split(':');
-          final lessonTimeslot = TimeSlot(
-              TimeOfDay(
-                  hour: int.parse(rawStartTimeComps[0]),
-                  minute: int.parse(rawStartTimeComps[1])
-              ),
-              TimeOfDay(
-                  hour: int.parse(rawEndTimeComps[0]),
-                  minute: int.parse(rawEndTimeComps[1])
-              )
+
+          final startDateTime = DateTime(
+            date.year,
+            date.month,
+            date.day,
+            int.parse(rawStartTimeComps[0]),
+            int.parse(rawStartTimeComps[1]),
+          );
+
+          final endDateTime = DateTime(
+            date.year,
+            date.month,
+            date.day,
+            int.parse(rawEndTimeComps[0]),
+            int.parse(rawEndTimeComps[1]),
           );
 
           courseLessons.add(
               CourseLesson(
-                  lessonDate,
-                  lessonTimeslot,
+                  startDateTime,
+                  endDateTime,
                   child.getAttribute('Aula')!,
                   child.getAttribute('Sede')!
               )
@@ -346,19 +350,12 @@ class Course {
 }
 
 class CourseLesson {
-  final DateTime date;
-  final TimeSlot timeSlot;
+  final DateTime startDateTime;
+  final DateTime endDateTime;
   final String building;
   final String room;
 
-  CourseLesson(this.date, this.timeSlot, this.building, this.room);
-}
-
-class TimeSlot {
-  final TimeOfDay startTime;
-  final TimeOfDay endTime;
-
-  TimeSlot(this.startTime, this.endTime);
+  CourseLesson(this.startDateTime, this.endDateTime, this.building, this.room);
 }
 
 class Professor {
