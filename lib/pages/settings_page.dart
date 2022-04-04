@@ -93,13 +93,19 @@ class _SettingsElement extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16),),
-      minLeadingWidth: 0,
-      leading: leading,
-      title: title,
-      trailing: trailing,
-      onTap: onTap,
+    return IconTheme(
+      data: IconThemeData(
+        color: Theme.of(context).colorScheme.onPrimaryContainer,
+      ),
+      child: ListTile(
+        textColor: Theme.of(context).colorScheme.onPrimaryContainer,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        minLeadingWidth: 0,
+        leading: leading,
+        title: title,
+        trailing: trailing,
+        onTap: onTap,
+      ),
     );
   }
 }

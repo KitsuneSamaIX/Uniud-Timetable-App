@@ -429,7 +429,14 @@ class _CustomListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _CustomListTileTheme(
+    return ListTileTheme(
+      data: ListTileThemeData(
+        tileColor: Theme.of(context).colorScheme.primaryContainer,
+        textColor: Theme.of(context).colorScheme.onPrimaryContainer,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+      ),
       child: ListView.separated(
         padding: const EdgeInsets.all(16),
         itemCount: itemCount,
@@ -439,29 +446,6 @@ class _CustomListView extends StatelessWidget {
     );
   }
 }
-
-class _CustomListTileTheme extends StatelessWidget {
-  final Widget child;
-
-  const _CustomListTileTheme({
-    Key? key,
-    required this.child,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return ListTileTheme(
-      data: ListTileThemeData(
-        tileColor: Theme.of(context).colorScheme.primaryContainer,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-      ),
-      child: child,
-    );
-  }
-}
-
 
 class _ConnectionErrorMessage extends StatelessWidget {
   const _ConnectionErrorMessage({Key? key}) : super(key: key);

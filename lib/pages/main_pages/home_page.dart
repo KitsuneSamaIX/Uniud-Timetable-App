@@ -58,7 +58,7 @@ class _HomePageState extends State<HomePage> {
                 Radius.circular(_fabDimension / 2),
               ),
             ),
-            closedColor: Theme.of(context).colorScheme.secondary,
+            closedColor: Theme.of(context).colorScheme.primary,
             closedBuilder: (BuildContext context, VoidCallback openContainer) {
               return SizedBox(
                 height: _fabDimension,
@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
                 child: Center(
                   child: Icon(
                     Icons.add,
-                    color: Theme.of(context).colorScheme.onSecondary,
+                    color: Theme.of(context).colorScheme.onPrimary,
                   ),
                 ),
               );
