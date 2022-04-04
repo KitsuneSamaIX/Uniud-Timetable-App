@@ -44,7 +44,7 @@ class _HomePageState extends State<HomePage> {
           return ScaleTransition(scale: animation, child: child);
         },
         child: Visibility(
-          key: ValueKey<bool>(_addProfileButtonVisible),
+          key: ValueKey<bool>(_addProfileButtonVisible), // This is for the animation
           visible: _addProfileButtonVisible,
           child: OpenContainer(
             transitionType: ContainerTransitionType.fade,
