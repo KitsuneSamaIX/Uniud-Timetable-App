@@ -87,6 +87,18 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.all(16),
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.only(right: 8),
+              child: Visibility(
+                visible: _selectedPageIndex == 0,
+                child: IconButton(
+                  onPressed: () {_selectedDayNotifier.value = DateTime.now();},
+                  color: Theme.of(context).colorScheme.secondary,
+                  iconSize: 32,
+                  icon: const Icon(Icons.today),
+                ),
+              ),
+            ),
             const Padding(
               padding: EdgeInsets.only(right: 16),
               child: _SettingsOpenContainer(),
