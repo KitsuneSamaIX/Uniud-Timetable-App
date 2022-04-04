@@ -37,7 +37,7 @@ class Profiles extends ChangeNotifier {
         _allLessons.addAll(course.lessons);
       }
     }
-    _allLessons.sort();
+    _allLessons.sort((a, b) => a.startDateTime.compareTo(b.startDateTime));
   }
 
   /// All the lessons from all profiles.
