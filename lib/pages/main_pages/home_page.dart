@@ -50,7 +50,7 @@ class _HomePageState extends State<HomePage> {
             transitionType: ContainerTransitionType.fade,
             transitionDuration: const Duration(milliseconds: 350),
             openBuilder: (BuildContext context, VoidCallback _) {
-              return const DepartmentSelectionPage();
+              return DepartmentSelectionPage();
             },
             closedElevation: 6.0,
             closedShape: const RoundedRectangleBorder(

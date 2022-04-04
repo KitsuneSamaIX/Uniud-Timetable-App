@@ -1,19 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:uniud_timetable_app/apis/uniud_timetable_api.dart';
 
-class Profiles extends ChangeNotifier { // TODO (add to a Provider at the top of the application, maybe a MultiProvider)
-  Set<Profile> profiles = {};
+class Profiles extends ChangeNotifier {
+  final Set<Profile> _profiles = {};
 
+  List<Profile> get profiles => _profiles.toList();
+
+  /// Loads saved profiles from disk.
   Future<void> loadProfiles() async { // TODO implement
 
   }
 
-  void addProfile(Profile profile) { // TODO implement
-
+  void addProfile(Profile profile) {
+    _profiles.add(profile);
+    notifyListeners();
   }
 
-  /// Deletes profile based on the == operator.
-  void deleteProfile(Profile profile) { // TODO implement
-
+  /// Deletes the profile based on the == operator.
+  void deleteProfile(Profile profile) {
+    _profiles.remove(profile);
+    notifyListeners();
   }
 }

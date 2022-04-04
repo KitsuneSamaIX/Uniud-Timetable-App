@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:uniud_timetable_app/apis/uniud_timetable_api.dart';
+import 'package:uniud_timetable_app/utilities/profiles.dart';
 
-class DepartmentSelectionPage extends StatefulWidget {
-  const DepartmentSelectionPage({Key? key}) : super(key: key);
+class DepartmentSelectionPage extends StatelessWidget {
+  final ProfileBuilder profileBuilder = ProfileBuilder();
 
-  @override
-  State<DepartmentSelectionPage> createState() =>
-      _DepartmentSelectionPageState();
-}
+  DepartmentSelectionPage({Key? key}) : super(key: key);
 
-class _DepartmentSelectionPageState extends State<DepartmentSelectionPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +34,10 @@ class _DepartmentSelectionPageState extends State<DepartmentSelectionPage> {
                     deparments[index].name,
                   ),
                   trailing: const Icon(Icons.arrow_forward_ios),
-                  onTap: () => _pushDegreeTypeSelectionPage(deparments[index]),
+                  onTap: () {
+                    profileBuilder.department = deparments[index];
+                    _pushNextPage(context, profileBuilder);
+                  },
                 );
               },
             );
@@ -50,30 +51,24 @@ class _DepartmentSelectionPageState extends State<DepartmentSelectionPage> {
     );
   }
 
-  void _pushDegreeTypeSelectionPage(Department department) {
+  void _pushNextPage(BuildContext context, ProfileBuilder profileBuilder) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (context) => DegreeTypeSelectionPage(department: department),
+        builder: (context) => DegreeTypeSelectionPage(profileBuilder: profileBuilder),
       ),
     );
   }
 }
 
-class DegreeTypeSelectionPage extends StatefulWidget {
-  final Department department;
+class DegreeTypeSelectionPage extends StatelessWidget {
+  final ProfileBuilder profileBuilder;
 
-  const DegreeTypeSelectionPage({Key? key, required this.department})
+  const DegreeTypeSelectionPage({Key? key, required this.profileBuilder})
       : super(key: key);
 
   @override
-  State<DegreeTypeSelectionPage> createState() =>
-      _DegreeTypeSelectionPageState();
-}
-
-class _DegreeTypeSelectionPageState extends State<DegreeTypeSelectionPage> {
-  @override
   Widget build(BuildContext context) {
-    final degreeTypes = UniudTimetableAPI.getDegreeTypes(widget.department);
+    final degreeTypes = UniudTimetableAPI.getDegreeTypes(profileBuilder.department!);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Select your Degree Type'),
@@ -92,36 +87,34 @@ class _DegreeTypeSelectionPageState extends State<DegreeTypeSelectionPage> {
               degreeTypes[index].name,
             ),
             trailing: const Icon(Icons.arrow_forward_ios),
-            onTap: () => _pushDegreeSelectionPage(degreeTypes[index]),
+            onTap: () {
+              profileBuilder.degreeType = degreeTypes[index];
+              _pushNextPage(context, profileBuilder);
+            },
           );
         },
       ),
     );
   }
 
-  void _pushDegreeSelectionPage(DegreeType degreeType) {
+  void _pushNextPage(BuildContext context, ProfileBuilder profileBuilder) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (context) => DegreeSelectionPage(degreeType: degreeType),
+        builder: (context) => DegreeSelectionPage(profileBuilder: profileBuilder),
       ),
     );
   }
 }
 
-class DegreeSelectionPage extends StatefulWidget {
-  final DegreeType degreeType;
+class DegreeSelectionPage extends StatelessWidget {
+  final ProfileBuilder profileBuilder;
 
-  const DegreeSelectionPage({Key? key, required this.degreeType})
+  const DegreeSelectionPage({Key? key, required this.profileBuilder})
       : super(key: key);
 
   @override
-  State<DegreeSelectionPage> createState() => _DegreeSelectionPageState();
-}
-
-class _DegreeSelectionPageState extends State<DegreeSelectionPage> {
-  @override
   Widget build(BuildContext context) {
-    final degrees = UniudTimetableAPI.getDegrees(widget.degreeType);
+    final degrees = UniudTimetableAPI.getDegrees(profileBuilder.degreeType!);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Select your Degree'),
@@ -140,35 +133,34 @@ class _DegreeSelectionPageState extends State<DegreeSelectionPage> {
               degrees[index].name,
             ),
             trailing: const Icon(Icons.arrow_forward_ios),
-            onTap: () => _pushPeriodSelectionPage(degrees[index]),
+            onTap: () {
+              profileBuilder.degree = degrees[index];
+              _pushNextPage(context, profileBuilder);
+            },
           );
         },
       ),
     );
   }
 
-  void _pushPeriodSelectionPage(Degree degree) {
+  void _pushNextPage(BuildContext context, ProfileBuilder profileBuilder) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
-        builder: (context) => PeriodSelectionPage(degree: degree),
+        builder: (context) => PeriodSelectionPage(profileBuilder: profileBuilder),
       ),
     );
   }
 }
 
-class PeriodSelectionPage extends StatefulWidget {
-  final Degree degree;
+class PeriodSelectionPage extends StatelessWidget {
+  final ProfileBuilder profileBuilder;
 
-  const PeriodSelectionPage({Key? key, required this.degree}) : super(key: key);
+  const PeriodSelectionPage({Key? key, required this.profileBuilder})
+      : super(key: key);
 
-  @override
-  State<PeriodSelectionPage> createState() => _PeriodSelectionPageState();
-}
-
-class _PeriodSelectionPageState extends State<PeriodSelectionPage> {
   @override
   Widget build(BuildContext context) {
-    final periods = UniudTimetableAPI.getPeriods(widget.degree);
+    final periods = UniudTimetableAPI.getPeriods(profileBuilder.degree!);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Select the Period'),
@@ -187,29 +179,31 @@ class _PeriodSelectionPageState extends State<PeriodSelectionPage> {
               periods[index].name,
             ),
             trailing: const Icon(Icons.arrow_forward_ios),
-            onTap: () => _pushCourseSelectionPage(widget.degree, periods[index]),
+            onTap: () {
+              profileBuilder.period = periods[index];
+              _pushNextPage(context, profileBuilder);
+            },
           );
         },
       ),
     );
   }
 
-  void _pushCourseSelectionPage(Degree degree, Period period) {
+  void _pushNextPage(BuildContext context, ProfileBuilder profileBuilder) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (context) =>
-            CourseSelectionPage(degree: degree, period: period,),
+            CourseSelectionPage(profileBuilder: profileBuilder),
       ),
     );
   }
 }
 
 class CourseSelectionPage extends StatefulWidget {
-  final Degree degree;
-  final Period period;
+  final ProfileBuilder profileBuilder;
 
-  const CourseSelectionPage(
-      {Key? key, required this.degree, required this.period}) : super(key: key);
+  const CourseSelectionPage({Key? key, required this.profileBuilder})
+      : super(key: key);
 
   @override
   State<CourseSelectionPage> createState() => _CourseSelectionPageState();
@@ -227,7 +221,8 @@ class _CourseSelectionPageState extends State<CourseSelectionPage> {
           IconButton(
             onPressed: () {
               if (_selectedCourses.isNotEmpty) {
-                _pushProfileNamePage(_selectedCourses);
+                widget.profileBuilder.courseDescriptors = _selectedCourses;
+                _pushNextPage(context, widget.profileBuilder);
               } else {
                 showDialog<void>(
                   context: context,
@@ -251,7 +246,8 @@ class _CourseSelectionPageState extends State<CourseSelectionPage> {
         ],
       ),
       body: FutureBuilder(
-        future: UniudTimetableAPI.getCourseDescriptors(widget.degree, widget.period),
+        future: UniudTimetableAPI.getCourseDescriptors(
+            widget.profileBuilder.degree!, widget.profileBuilder.period!),
         builder: (BuildContext context, AsyncSnapshot<List<CourseDescriptor>> snapshot) {
           if (snapshot.hasData) {
             final courses = snapshot.data!;
@@ -348,23 +344,21 @@ class _CourseSelectionPageState extends State<CourseSelectionPage> {
     );
   }
 
-  void _pushProfileNamePage(Set<CourseDescriptor> courseDescriptors) {
+  void _pushNextPage(BuildContext context, ProfileBuilder profileBuilder) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
         builder: (context) =>
-            ProfileNamePage(courseDescriptors: _selectedCourses,),
+            ProfileNamePage(profileBuilder: profileBuilder),
       ),
     );
   }
 }
 
 class ProfileNamePage extends StatefulWidget {
-  final Set<CourseDescriptor> courseDescriptors;
+  final ProfileBuilder profileBuilder;
 
-  const ProfileNamePage({
-    Key? key,
-    required this.courseDescriptors,
-  }) : super(key: key);
+  const ProfileNamePage({Key? key, required this.profileBuilder,})
+      : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _ProfileNamePageState();
@@ -401,6 +395,7 @@ class _ProfileNamePageState extends State<ProfileNamePage> {
                 validator: (value) {
                   // TODO check here if there are other profiles with the same name, if there are return null (which means invalid) on this function
                   // TODO remember to remove the trailing whitespaces before checking the name (and also before saving the name)
+                  // TODO remember to also enforce a reasonable limit on the length of the profile's name
                   if (value == null || value.isEmpty) {
                     return 'Please set a profile name.';
                   } else if (value.contains('a')) { // TODO remove this test
@@ -416,7 +411,7 @@ class _ProfileNamePageState extends State<ProfileNamePage> {
             ElevatedButton(
               onPressed: () {
                 final text = _textEditingController.text;
-                print(text); // TODO this is a test
+                widget.profileBuilder.name = text;
                 if (_formKey.currentState!.validate()) {
                   setState(() {
                     _isLoading = true;
@@ -439,11 +434,12 @@ class _ProfileNamePageState extends State<ProfileNamePage> {
   }
 
   Future<void> _loadCourses() async {
-    final Set<Course> courses = {};
-    for (final courseDescriptor in widget.courseDescriptors) {
-      courses.add(await UniudTimetableAPI.getCourse(courseDescriptor));
+    widget.profileBuilder.courses = {};
+    for (final courseDescriptor in widget.profileBuilder.courseDescriptors!) {
+      widget.profileBuilder.courses!.add(await UniudTimetableAPI.getCourse(courseDescriptor));
     }
-    //TODO create and save the Profile in this function(?)
+    final profilesProvider = Provider.of<Profiles>(context, listen: false);
+    profilesProvider.addProfile(widget.profileBuilder.build());
   }
 }
 
