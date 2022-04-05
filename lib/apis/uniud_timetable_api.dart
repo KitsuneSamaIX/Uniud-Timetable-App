@@ -157,7 +157,23 @@ class UniudTimetableAPI {
         final docProfessor = docCourse.getElement('DocenteTitolare')!;
         final docCalendar = docCourse.getElement('CalendarioLezioni')!;
 
-        final List<CourseLesson> courseLessons = [];
+        // Build the Professor object
+        final courseProfessor = Professor(
+            docProfessor.getAttribute('Nome')!,
+            docProfessor.getAttribute('Cognome')!
+        );
+        courseProfessor.email = docProfessor.getAttribute('Mail1');
+        courseProfessor.phone = docProfessor.getAttribute('Fisso');
+
+        // Build the Course object
+        final course = Course(
+            docCourse.getAttribute('Nome')!,
+            docCourse.getAttribute('Crediti')!,
+            courseProfessor,
+            []
+        );
+
+        // Build the CourseLesson objects and insert them into the Course object
         for (final child in docCalendar.findElements('Giorno')) {
           // Parse the date
           final rawDate = child.getAttribute('Data')!;
@@ -167,6 +183,7 @@ class UniudTimetableAPI {
               int.parse(rawDateComps[1]),
               int.parse(rawDateComps[0])
           );
+
           // Parse the timeslot
           final rawStartTime = child.getAttribute('OraInizio')!;
           final rawStartTimeComps = rawStartTime.split(':');
@@ -189,31 +206,20 @@ class UniudTimetableAPI {
             int.parse(rawEndTimeComps[1]),
           );
 
-          courseLessons.add(
-              CourseLesson(
-                  startDateTime,
-                  endDateTime,
-                  child.getAttribute('Aula')!,
-                  child.getAttribute('Sede')!
-              )
+          course.lessons.add(
+            CourseLesson(
+              course,
+              startDateTime,
+              endDateTime,
+              child.getAttribute('Aula')!,
+              child.getAttribute('Sede')!,
+            )
           );
         }
 
-        // Build the Professor object
-        final courseProfessor = Professor(
-            docProfessor.getAttribute('Nome')!,
-            docProfessor.getAttribute('Cognome')!
-        );
-        courseProfessor.email = docProfessor.getAttribute('Mail1');
-        courseProfessor.phone = docProfessor.getAttribute('Fisso');
+        // Return the Course object
+        return course;
 
-        // Build and return the Course object
-        return Course(
-            docCourse.getAttribute('Nome')!,
-            docCourse.getAttribute('Crediti')!,
-            courseProfessor,
-            courseLessons
-        );
       } catch(e) {
         throw Exception("A problem occurred while parsing the course's xml data. ($e)");
       }
@@ -350,12 +356,14 @@ class Course {
 }
 
 class CourseLesson {
+  final Course course;
   final DateTime startDateTime;
   final DateTime endDateTime;
   final String building;
   final String room;
 
-  CourseLesson(this.startDateTime, this.endDateTime, this.building, this.room);
+  CourseLesson(
+      this.course, this.startDateTime, this.endDateTime, this.building, this.room);
 }
 
 class Professor {

@@ -1,6 +1,7 @@
 import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:uniud_timetable_app/utilities/profiles.dart';
 
 class TimetablePage extends StatefulWidget {
   const TimetablePage({Key? key}) : super(key: key);
@@ -12,7 +13,9 @@ class TimetablePage extends StatefulWidget {
 class _TimetablePageState extends State<TimetablePage> {
   @override
   Widget build(BuildContext context) {
-    var selectedDayProvider = Provider.of<ValueNotifier<DateTime>>(context);
+    final selectedDayProvider = Provider.of<ValueNotifier<DateTime>>(context);
+    final profilesProvider = Provider.of<Profiles>(context);
+    final selectedDayLessons = profilesProvider.allLessonsOf(day: selectedDayProvider.value);
     return Column(
       children: [
         CalendarTimeline(
@@ -23,7 +26,7 @@ class _TimetablePageState extends State<TimetablePage> {
             if (dateTime != null) {
               selectedDayProvider.value = dateTime;
             }
-          }, // TODO onDateSelected change the timetabled displayed
+          },
           leftMargin: 60,
           monthColor: Theme.of(context).colorScheme.secondary,
           dayColor: Theme.of(context).colorScheme.secondary,
@@ -31,17 +34,22 @@ class _TimetablePageState extends State<TimetablePage> {
           activeBackgroundDayColor: Theme.of(context).colorScheme.primaryContainer,
         ),
         Expanded(
-          child: Center(
-            child: ElevatedButton(
-              child: const Text(
-                'Test button',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              onPressed: () => selectedDayProvider.value = DateTime.now(),
-            ),
+          child: ListView.separated(
+            itemCount: selectedDayLessons.length,
+            itemBuilder: (context, index) {
+              final timeSlotString =
+                  '${selectedDayLessons[index].startDateTime.hour}:'
+                  '${selectedDayLessons[index].startDateTime.minute} -> '
+                  '${selectedDayLessons[index].endDateTime.hour}:'
+                  '${selectedDayLessons[index].endDateTime.minute}';
+              return ListTile(
+                title: Text(selectedDayLessons[index].course.name),
+                subtitle: Text(timeSlotString),
+              );
+            },
+            separatorBuilder: (BuildContext context, int index) {
+              return const Divider();
+            },
           ),
         ),
       ],
