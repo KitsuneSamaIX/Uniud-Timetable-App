@@ -42,6 +42,7 @@ dependencies:
   shared_preferences: ^2.0.13
   provider: ^6.0.2
   scrollable_positioned_list: ^0.2.3
+  json_annotation: ^4.4.0
 
 dev_dependencies:
   flutter_test:
@@ -55,6 +56,8 @@ dev_dependencies:
   flutter_lints: ^1.0.0
 
   test: ^1.19.5
+  build_runner: ^2.1.8
+  json_serializable: ^6.1.5
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
