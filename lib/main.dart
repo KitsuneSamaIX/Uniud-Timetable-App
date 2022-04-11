@@ -14,7 +14,7 @@ void main() async {
 
   // Load profiles
   final profiles = Profiles();
-  // TODO load profiles from disk (this operation will be an async one for sure).
+  await profiles.loadProfiles();
 
   runApp(MyApp(appSettings: appSettings, profiles: profiles,));
 }

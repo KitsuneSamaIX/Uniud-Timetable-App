@@ -3,6 +3,17 @@ import 'package:json_annotation/json_annotation.dart';
 part 'profile_models.g.dart';
 
 @JsonSerializable(explicitToJson: true)
+class ProfilesWrapper {
+  final Set<Profile> profiles;
+
+  ProfilesWrapper(this.profiles);
+
+  factory ProfilesWrapper.fromJson(Map<String, dynamic> json) => _$ProfilesWrapperFromJson(json);
+
+  Map<String, dynamic> toJson() => _$ProfilesWrapperToJson(this);
+}
+
+@JsonSerializable(explicitToJson: true)
 class Profile {
   final String name;
   final String departmentName;

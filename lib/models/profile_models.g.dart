@@ -6,6 +6,18 @@ part of 'profile_models.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+ProfilesWrapper _$ProfilesWrapperFromJson(Map<String, dynamic> json) =>
+    ProfilesWrapper(
+      (json['profiles'] as List<dynamic>)
+          .map((e) => Profile.fromJson(e as Map<String, dynamic>))
+          .toSet(),
+    );
+
+Map<String, dynamic> _$ProfilesWrapperToJson(ProfilesWrapper instance) =>
+    <String, dynamic>{
+      'profiles': instance.profiles.map((e) => e.toJson()).toList(),
+    };
+
 Profile _$ProfileFromJson(Map<String, dynamic> json) => Profile(
       json['name'] as String,
       json['departmentName'] as String,
