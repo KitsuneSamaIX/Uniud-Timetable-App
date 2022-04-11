@@ -32,7 +32,6 @@ class Profiles extends ChangeNotifier {
   /// These are guaranteed to be sorted by [CourseLesson.startDateTime] using [List.sort].
   List<CourseLesson> get allLessons => _allLessons;
 
-  // TODO OPTIMIZATION implement search with binary search
   /// Return all lessons for the specified [day].
   ///
   /// These are guaranteed to be sorted by [CourseLesson.startDateTime] using [List.sort].

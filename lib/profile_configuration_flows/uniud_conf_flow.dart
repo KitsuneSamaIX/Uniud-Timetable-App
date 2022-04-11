@@ -343,6 +343,11 @@ class _ProfileNamePageState extends State<ProfileNamePage> {
 
   @override
   Widget build(BuildContext context) {
+    // Gather all current profile names to validate the new one
+    final profilesProvider = Provider.of<Profiles>(context, listen: false);
+    final profiles = profilesProvider.profiles;
+    final profileNames = profiles.map((e) => e.name).toSet();
+
     return Scaffold( // TODO WillPopScope to avoid the user going back (popping this route) before the loading is completed.
       appBar: AppBar(
         title: const Text('Name your Profile'),
@@ -365,15 +370,16 @@ class _ProfileNamePageState extends State<ProfileNamePage> {
                   FilteringTextInputFormatter.allow(RegExp(r"[0-9a-zA-Z_ ]")),
                 ],
                 validator: (value) {
-                  // TODO check here if there are other profiles with the same name, if there are return null (which means invalid) on this function
-                  // TODO remember to remove the trailing whitespaces before checking the name (and also before saving the name)
-                  // TODO remember to also enforce a reasonable limit on the length of the profile's name
                   if (value == null || value.isEmpty) {
                     return 'Please set a profile name.';
-                  } else if (value.contains('a')) { // TODO remove this test
-                    return 'Test validation!';
+                  } else if (value.length > 50) {
+                    return 'Profile name must have less than 50 characters.';
+                  } else if (value.endsWith(' ')) {
+                    return 'Whitespaces at the end of the name are not allowed.';
+                  } else if (profileNames.contains(value)) {
+                    return 'There is already another profile with this name.';
                   } else {
-                    return null;
+                    return null; // Null means the string is valid
                   }
                 },
               ),
