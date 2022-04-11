@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uniud_timetable_app/models/profile_models.dart';
 
 class Profiles extends ChangeNotifier {
@@ -51,8 +52,14 @@ class Profiles extends ChangeNotifier {
   /// Loads saved profiles from disk.
   Future<void> loadProfiles() async {
     if (kIsWeb) {
-      // TODO
-      throw UnimplementedError();
+      final prefs = await SharedPreferences.getInstance();
+      final profilesJson = prefs.getString('profiles.json');
+      if (profilesJson != null) {
+        _profilesWrapper = ProfilesWrapper.fromJson(
+            jsonDecode(profilesJson) as Map<String, dynamic>);
+      } else {
+        return;
+      }
     } else {
       final file = await _localFile;
       final fileExists = await file.exists();
@@ -73,8 +80,8 @@ class Profiles extends ChangeNotifier {
   /// Saves profiles on disk.
   Future<void> saveProfiles() async {
     if (kIsWeb) {
-      // TODO
-      throw UnimplementedError();
+      final prefs = await SharedPreferences.getInstance();
+      prefs.setString('profiles.json', jsonEncode(_profilesWrapper.toJson()));
     } else {
       final file = await _localFile;
       file.writeAsString(jsonEncode(_profilesWrapper.toJson()));
