@@ -348,58 +348,63 @@ class _ProfileNamePageState extends State<ProfileNamePage> {
     final profiles = profilesProvider.profiles;
     final profileNames = profiles.map((e) => e.name).toSet();
 
-    return Scaffold( // TODO WillPopScope to avoid the user going back (popping this route) before the loading is completed.
-      appBar: AppBar(
-        title: const Text('Name your Profile'),
-      ),
-      body: Form(
-        key: _formKey,
-        autovalidateMode: AutovalidateMode.always,
-        child: Column(
-          children: [
-            const SizedBox(height: 64,),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32),
-              child: TextFormField(
-                controller: _textEditingController,
-                decoration: const InputDecoration(
-                  icon: Icon(Icons.person),
-                  labelText: 'Profile Name',
+    return WillPopScope(
+      onWillPop: () async {
+        return !_isLoading;
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Name your Profile'),
+        ),
+        body: Form(
+          key: _formKey,
+          autovalidateMode: AutovalidateMode.always,
+          child: Column(
+            children: [
+              const SizedBox(height: 64,),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 32),
+                child: TextFormField(
+                  controller: _textEditingController,
+                  decoration: const InputDecoration(
+                    icon: Icon(Icons.person),
+                    labelText: 'Profile Name',
+                  ),
+                  inputFormatters: <TextInputFormatter>[
+                    FilteringTextInputFormatter.allow(RegExp(r"[0-9a-zA-Z_ ]")),
+                  ],
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please set a profile name.';
+                    } else if (value.length > 50) {
+                      return 'Profile name must have less than 50 characters.';
+                    } else if (value.endsWith(' ')) {
+                      return 'Whitespaces at the end of the name are not allowed.';
+                    } else if (profileNames.contains(value)) {
+                      return 'There is already another profile with this name.';
+                    } else {
+                      return null; // Null means the string is valid
+                    }
+                  },
                 ),
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.allow(RegExp(r"[0-9a-zA-Z_ ]")),
-                ],
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please set a profile name.';
-                  } else if (value.length > 50) {
-                    return 'Profile name must have less than 50 characters.';
-                  } else if (value.endsWith(' ')) {
-                    return 'Whitespaces at the end of the name are not allowed.';
-                  } else if (profileNames.contains(value)) {
-                    return 'There is already another profile with this name.';
-                  } else {
-                    return null; // Null means the string is valid
+              ),
+              const SizedBox(height: 32,),
+              _isLoading ? const CircularProgressIndicator() :
+              ElevatedButton(
+                onPressed: () {
+                  final text = _textEditingController.text;
+                  widget.profileBuilder.name = text;
+                  if (_formKey.currentState!.validate()) {
+                    setState(() {
+                      _isLoading = true;
+                      _loadCourses().then((_) => Navigator.of(context).popUntil((route) => route.isFirst));
+                    });
                   }
                 },
+                child: const Text('Save'),
               ),
-            ),
-            const SizedBox(height: 32,),
-            _isLoading ? const CircularProgressIndicator() :
-            ElevatedButton(
-              onPressed: () {
-                final text = _textEditingController.text;
-                widget.profileBuilder.name = text;
-                if (_formKey.currentState!.validate()) {
-                  setState(() {
-                    _isLoading = true;
-                    _loadCourses().then((_) => Navigator.of(context).popUntil((route) => route.isFirst));
-                  });
-                }
-              },
-              child: const Text('Save'),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
