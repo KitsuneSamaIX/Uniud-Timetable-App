@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:http/http.dart' as http;
+import 'package:uniud_timetable_app/models/profile_models.dart';
 import 'package:xml/xml.dart';
 
 class UniudTimetableAPI {
@@ -235,28 +236,6 @@ class UniudTimetableAPI {
   }
 }
 
-class Profile {
-  final String name;
-  final String departmentName;
-  final String degreeTypeName;
-  final String degreeName;
-  final String periodName;
-  final Set<Course> courses;
-
-  Profile(this.name, this.departmentName, this.degreeTypeName, this.degreeName,
-      this.periodName, this.courses);
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Profile &&
-          runtimeType == other.runtimeType &&
-          name == other.name;
-
-  @override
-  int get hashCode => name.hashCode;
-}
-
 class ProfileBuilder {
   String? name;
   Department? department;
@@ -336,45 +315,4 @@ class CourseDescriptor {
 
   @override
   int get hashCode => fileId.hashCode;
-}
-
-class Course {
-  final String name;
-  final String credits;
-  final Professor professor;
-  final List<CourseLesson> lessons;
-
-  Course(this.name, this.credits, this.professor, this.lessons);
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is Course &&
-          runtimeType == other.runtimeType &&
-          name == other.name &&
-          credits == other.credits &&
-          professor == other.professor;
-
-  @override
-  int get hashCode => name.hashCode ^ credits.hashCode ^ professor.hashCode;
-}
-
-class CourseLesson {
-  final Course course;
-  final DateTime startDateTime;
-  final DateTime endDateTime;
-  final String building;
-  final String room;
-
-  CourseLesson(
-      this.course, this.startDateTime, this.endDateTime, this.building, this.room);
-}
-
-class Professor {
-  final String name;
-  final String surname;
-  String? email;
-  String? phone;
-
-  Professor(this.name, this.surname);
 }

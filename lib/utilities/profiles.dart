@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:uniud_timetable_app/apis/uniud_timetable_api.dart';
+import 'package:uniud_timetable_app/models/profile_models.dart';
 
 class Profiles extends ChangeNotifier {
   final Set<Profile> _profiles = {};
