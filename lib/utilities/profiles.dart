@@ -53,7 +53,7 @@ class Profiles extends ChangeNotifier {
   Future<void> loadProfiles() async {
     if (kIsWeb) {
       final prefs = await SharedPreferences.getInstance();
-      final profilesJson = prefs.getString('profiles.json');
+      final profilesJson = prefs.getString(_fileName);
       if (profilesJson != null) {
         _profilesWrapper = ProfilesWrapper.fromJson(
             jsonDecode(profilesJson) as Map<String, dynamic>);
@@ -81,7 +81,7 @@ class Profiles extends ChangeNotifier {
   Future<void> saveProfiles() async {
     if (kIsWeb) {
       final prefs = await SharedPreferences.getInstance();
-      prefs.setString('profiles.json', jsonEncode(_profilesWrapper.toJson()));
+      prefs.setString(_fileName, jsonEncode(_profilesWrapper.toJson()));
     } else {
       final file = await _localFile;
       file.writeAsString(jsonEncode(_profilesWrapper.toJson()));
