@@ -213,7 +213,6 @@ class UniudTimetableAPI {
 
           course.lessons.add(
             CourseLesson(
-              course,
               startDateTime,
               endDateTime,
               child.getAttribute('Aula')!,

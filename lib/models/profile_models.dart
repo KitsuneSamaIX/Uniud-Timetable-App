@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:uniud_timetable_app/utilities/profiles.dart';
 
 part 'profile_models.g.dart';
 
@@ -68,14 +69,17 @@ class Course {
 
 @JsonSerializable(explicitToJson: true)
 class CourseLesson {
-  final Course course;
+  /// The parent [course] reference.
+  /// This is guaranteed to be non-null if this object has been retrieved
+  /// through the [Profiles] class.
+  @JsonKey(ignore: true) // Ignore to avoid circular reference
+  Course? course;
   final DateTime startDateTime;
   final DateTime endDateTime;
   final String building;
   final String room;
 
-  CourseLesson(
-      this.course, this.startDateTime, this.endDateTime, this.building, this.room);
+  CourseLesson(this.startDateTime, this.endDateTime, this.building, this.room);
 
   factory CourseLesson.fromJson(Map<String, dynamic> json) => _$CourseLessonFromJson(json);
 

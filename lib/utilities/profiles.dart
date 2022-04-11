@@ -105,7 +105,12 @@ class Profiles extends ChangeNotifier {
     _allLessons.clear();
     for (final profile in _profilesWrapper.profiles) {
       for (final course in profile.courses) {
-        _allLessons.addAll(course.lessons);
+        // Keep a reference to the parent course
+        final lessonsIterWithParentRef = course.lessons.map((e) {
+          e.course = course;
+          return e;
+        });
+        _allLessons.addAll(lessonsIterWithParentRef);
       }
     }
     _allLessons.sort((a, b) => a.startDateTime.compareTo(b.startDateTime));

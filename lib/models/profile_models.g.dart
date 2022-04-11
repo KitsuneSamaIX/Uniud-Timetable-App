@@ -55,7 +55,6 @@ Map<String, dynamic> _$CourseToJson(Course instance) => <String, dynamic>{
     };
 
 CourseLesson _$CourseLessonFromJson(Map<String, dynamic> json) => CourseLesson(
-      Course.fromJson(json['course'] as Map<String, dynamic>),
       DateTime.parse(json['startDateTime'] as String),
       DateTime.parse(json['endDateTime'] as String),
       json['building'] as String,
@@ -64,7 +63,6 @@ CourseLesson _$CourseLessonFromJson(Map<String, dynamic> json) => CourseLesson(
 
 Map<String, dynamic> _$CourseLessonToJson(CourseLesson instance) =>
     <String, dynamic>{
-      'course': instance.course.toJson(),
       'startDateTime': instance.startDateTime.toIso8601String(),
       'endDateTime': instance.endDateTime.toIso8601String(),
       'building': instance.building,

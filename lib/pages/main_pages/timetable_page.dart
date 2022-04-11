@@ -43,7 +43,7 @@ class _TimetablePageState extends State<TimetablePage> {
                   '${selectedDayLessons[index].endDateTime.hour}:'
                   '${selectedDayLessons[index].endDateTime.minute}';
               return ListTile(
-                title: Text(selectedDayLessons[index].course.name),
+                title: Text(selectedDayLessons[index].course!.name),
                 subtitle: Text(timeSlotString),
               );
             },
