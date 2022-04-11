@@ -12,7 +12,12 @@ class Profiles extends ChangeNotifier {
 
   var _profilesWrapper = ProfilesWrapper({});
 
-  /// All the lessons from all profiles.
+  /// All courses from all profiles.
+  ///
+  /// These are guaranteed to have no duplicate courses.
+  final Set<Course> _allCourses = {};
+
+  /// All lessons from all courses from all profiles.
   ///
   /// These are guaranteed to be sorted by [CourseLesson.startDateTime] using [List.sort].
   final List<CourseLesson> _allLessons = [];
@@ -62,7 +67,7 @@ class Profiles extends ChangeNotifier {
     }
 
     // Update
-    _updateAllLessons();
+    _updateInternalState();
     notifyListeners();
   }
 
@@ -82,7 +87,7 @@ class Profiles extends ChangeNotifier {
     _profilesWrapper.profiles.add(profile);
 
     // Update
-    _updateAllLessons();
+    _updateInternalState();
     notifyListeners();
     saveProfiles();
   }
@@ -93,26 +98,40 @@ class Profiles extends ChangeNotifier {
     _profilesWrapper.profiles.remove(profile);
 
     // Update
-    _updateAllLessons();
+    _updateInternalState();
     notifyListeners();
     saveProfiles();
   }
 
   // MANAGEMENT ----------------------------------------------------------------
 
-  /// Updates [_allLessons] list when a profiles are modified.
-  void _updateAllLessons() {
+  /// Updates the internal state of this istance when profiles are modified.
+  ///
+  /// In particular it:
+  /// - updates [_allCourses] Set.
+  /// - updates [_allLessons] List.
+  void _updateInternalState() {
+    // Clear previous courses
+    _allCourses.clear();
+    // Clear previous lessons
     _allLessons.clear();
+
+    // Gather all courses inside a Set to remove possible duplicates
     for (final profile in _profilesWrapper.profiles) {
-      for (final course in profile.courses) {
-        // Keep a reference to the parent course
-        final lessonsIterWithParentRef = course.lessons.map((e) {
-          e.course = course;
-          return e;
-        });
-        _allLessons.addAll(lessonsIterWithParentRef);
-      }
+      _allCourses.addAll(profile.courses);
     }
+
+    // Update all lessons keeping a reference to the parent course
+    for (final course in _allCourses) {
+      // Keep a reference to the parent course
+      final lessonsIterWithParentRef = course.lessons.map((e) {
+        e.course = course;
+        return e;
+      });
+      _allLessons.addAll(lessonsIterWithParentRef);
+    }
+
+    // Sort all lessons by their start DateTime
     _allLessons.sort((a, b) => a.startDateTime.compareTo(b.startDateTime));
   }
 
