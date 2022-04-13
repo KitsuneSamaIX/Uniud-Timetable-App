@@ -57,7 +57,7 @@ class _WeekTimelineState extends State<WeekTimeline> {
                   date: selectedWeekDates[j],
                   isSelected: _areDatesEqual(
                       selectedWeekDates[j], widget.controller.selectedDate),
-                  onClick: () {
+                  onTap: () {
                     widget.controller.selectedDate = selectedWeekDates[j];
                   },
                 );
@@ -113,20 +113,20 @@ class _WeekTimelineState extends State<WeekTimeline> {
 
 class _DayTile extends StatelessWidget {
   final DateTime date;
-  final void Function() onClick;
+  final void Function() onTap;
   final bool isSelected;
 
   const _DayTile({
     Key? key,
     required this.date,
-    required this.onClick,
+    required this.onTap,
     this.isSelected = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => onClick(),
+      onTap: () => onTap(),
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
         decoration: BoxDecoration(
