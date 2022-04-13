@@ -38,36 +38,39 @@ class _WeekTimelineState extends State<WeekTimeline> with AutomaticKeepAliveClie
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return SizedBox(
-      height: 70,
-      child: PageView.builder(
-        controller: _pageController,
-        scrollDirection: Axis.horizontal,
-        onPageChanged: (index) {
-          widget.controller.selectedDate = _weeks[index]
-              .weekDates[widget.controller.selectedDate.weekday-1];
-        },
-        itemBuilder: (context, index) {
-          final selectedWeek = _weeks[index];
-          final selectedWeekDates = selectedWeek.weekDates;
-          return Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Row(
-                children: List.generate(selectedWeekDates.length, (j) {
-                  return _DayTile(
-                    date: selectedWeekDates[j],
-                    isSelected: _areDatesEqual(
-                        selectedWeekDates[j], widget.controller.selectedDate),
-                    onTap: () {
-                      widget.controller.selectedDate = selectedWeekDates[j];
-                    },
-                  );
-                }),
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: SizedBox(
+        height: 70,
+        child: PageView.builder(
+          controller: _pageController,
+          scrollDirection: Axis.horizontal,
+          onPageChanged: (index) {
+            widget.controller.selectedDate = _weeks[index]
+                .weekDates[widget.controller.selectedDate.weekday-1];
+          },
+          itemBuilder: (context, index) {
+            final selectedWeek = _weeks[index];
+            final selectedWeekDates = selectedWeek.weekDates;
+            return Expanded(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Row(
+                  children: List.generate(selectedWeekDates.length, (j) {
+                    return _DayTile(
+                      date: selectedWeekDates[j],
+                      isSelected: _areDatesEqual(
+                          selectedWeekDates[j], widget.controller.selectedDate),
+                      onTap: () {
+                        widget.controller.selectedDate = selectedWeekDates[j];
+                      },
+                    );
+                  }),
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
@@ -137,7 +140,7 @@ class _DayTile extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
             decoration: BoxDecoration(
               color: isSelected ? Theme.of(context).colorScheme.primaryContainer : null,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(14),
             ),
             child: DefaultTextStyle(
               style: TextStyle(
@@ -152,7 +155,7 @@ class _DayTile extends StatelessWidget {
                   const SizedBox(height: 8),
                   FittedBox(
                     fit: BoxFit.contain,
-                    child: Text('${date.day}', style: const TextStyle(fontSize: 26),),
+                    child: Text('${date.day}', style: const TextStyle(fontSize: 27),),
                   )
                 ],
               ),
