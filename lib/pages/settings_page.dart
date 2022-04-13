@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:uniud_timetable_app/common/common.dart' show separateWidgets;
 import 'package:uniud_timetable_app/utilities/app_settings.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -19,8 +20,8 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
-        children: _separateItems(
-          items: [
+        children: separateWidgets(
+          widgets: [
             const _ThemeSettings(),
             _SettingsGroup(
               title: 'Dark Mode',
@@ -71,8 +72,8 @@ class _SettingsGroup extends StatelessWidget {
             borderRadius: BorderRadius.circular(16),
           ),
           child: Column(
-            children: _separateItems(
-              items: elements,
+            children: separateWidgets(
+              widgets: elements,
               separator: const Divider(height: 0,)
             ),
           ),
@@ -139,15 +140,15 @@ class _ThemeSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final separatedAppKeyColors = _separateItems(
-      items: List.generate(AppKeyColor.values.length, (index) =>
+    final separatedAppKeyColors = separateWidgets(
+      widgets: List.generate(AppKeyColor.values.length, (index) =>
           _AppKeyColorOption(appKeyColor: AppKeyColor.values[index])
       ),
       separator: const Spacer(),
     );
     // Generate the rows with the options
-    final separatedThemeModeOptions = _separateItems(
-      items: List.generate(_availableThemeModes.length, (index) =>
+    final separatedThemeModeOptions = separateWidgets(
+      widgets: List.generate(_availableThemeModes.length, (index) =>
           _ThemeModeOption(themeModeWrapper: _availableThemeModes[index])
       ),
       separator: const Spacer(),
@@ -237,19 +238,6 @@ class _AppKeyColorOption extends StatelessWidget {
       ),
     );
   }
-}
-
-/// Separates a list of Widgets with a separator Widget.
-List<Widget> _separateItems({required List<Widget> items, required Widget separator}) {
-  final List<Widget> separatedItems = [];
-  final lastIndex = items.length - 1;
-  items.asMap().forEach((index, item) {
-    separatedItems.add(item);
-    if (index != lastIndex) {
-      separatedItems.add(separator);
-    }
-  });
-  return separatedItems;
 }
 
 class _ThemeModeWrapper {

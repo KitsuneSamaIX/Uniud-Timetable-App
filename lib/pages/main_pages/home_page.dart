@@ -6,6 +6,7 @@ import 'package:uniud_timetable_app/pages/settings_page.dart';
 import 'package:uniud_timetable_app/pages/main_pages/timetable_page.dart';
 import 'package:uniud_timetable_app/pages/main_pages/profiles_page.dart';
 import 'package:uniud_timetable_app/profile_configuration_flows/uniud_conf_flow.dart';
+import 'package:uniud_timetable_app/utilities/timetable_manager.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -27,13 +28,7 @@ class _HomePageState extends State<HomePage> {
   final _pageHeadings = ['Timetable', 'Profiles'];
 
   // Timetable page
-  final _selectedDayNotifier = ValueNotifier(DateTime.now());
-
-  @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
+  final _timetableManager = TimetableManager();
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +87,7 @@ class _HomePageState extends State<HomePage> {
               child: Visibility(
                 visible: _selectedPageIndex == 0,
                 child: IconButton(
-                  onPressed: () {_selectedDayNotifier.value = DateTime.now();},
+                  onPressed: () => _timetableManager.gotoDay(DateTime.now()),
                   color: Theme.of(context).colorScheme.secondary,
                   iconSize: 32,
                   icon: const Icon(Icons.today),
@@ -139,13 +134,19 @@ class _HomePageState extends State<HomePage> {
         }),
         children: [
           ChangeNotifierProvider.value(
-            value: _selectedDayNotifier,
+            value: _timetableManager,
             child: const TimetablePage(),
           ),
           const ProfilesPage(),
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 }
 
@@ -253,3 +254,5 @@ class _SettingsOpenContainer extends StatelessWidget {
     );
   }
 }
+
+// Utility
