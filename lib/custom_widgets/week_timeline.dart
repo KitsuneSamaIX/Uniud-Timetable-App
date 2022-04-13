@@ -43,7 +43,7 @@ class _WeekTimelineState extends State<WeekTimeline> {
         scrollDirection: Axis.horizontal,
         onPageChanged: (index) {
           widget.controller.selectedDate = _weeks[index]
-              .weekDates[widget.controller.selectedDate.weekday];
+              .weekDates[widget.controller.selectedDate.weekday-1];
         },
         itemBuilder: (context, index) {
           final selectedWeek = _weeks[index];
@@ -57,7 +57,9 @@ class _WeekTimelineState extends State<WeekTimeline> {
                   date: selectedWeekDates[j],
                   isSelected: _areDatesEqual(
                       selectedWeekDates[j], widget.controller.selectedDate),
-                  onClick: () => {},
+                  onClick: () {
+                    widget.controller.selectedDate = selectedWeekDates[j];
+                  },
                 );
               }),
               separator: const Spacer(),
@@ -123,18 +125,23 @@ class _DayTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-      decoration: BoxDecoration(
-        color: isSelected ? Theme.of(context).colorScheme.primaryContainer : null,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        children: [
-          Text('M${date.month}'),
-          Text('D${date.day}'),
-        ],
-      ),
+    return GestureDetector(
+      onTap: () => onClick(),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+        decoration: BoxDecoration(
+          color: isSelected ? Theme.of(context).colorScheme.primaryContainer : null,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(DateFormat.E().format(date)),
+            const SizedBox(height: 10),
+            Text('${date.day}'),
+          ],
+        ),
+      )
     );
   }
 }

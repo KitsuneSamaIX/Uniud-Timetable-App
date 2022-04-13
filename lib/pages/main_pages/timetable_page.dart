@@ -13,6 +13,8 @@ class TimetablePage extends StatefulWidget {
 }
 
 class _TimetablePageState extends State<TimetablePage> {
+  final weekTimelineController = WeekTimelineController(initialDate: DateTime.now());
+
   @override
   Widget build(BuildContext context) {
     final timetableManagerProvider = Provider.of<TimetableManager>(context);
@@ -36,7 +38,7 @@ class _TimetablePageState extends State<TimetablePage> {
         //   activeBackgroundDayColor: Theme.of(context).colorScheme.primaryContainer,
         // ),
         WeekTimeline(
-          controller: WeekTimelineController(initialDate: DateTime.now()),
+          controller: weekTimelineController,
         ),
         Expanded( // TODO try the Card() Widget
         child: PageView.builder(
