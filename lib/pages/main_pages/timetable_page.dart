@@ -41,8 +41,8 @@ class _TimetablePageState extends State<TimetablePage> {
         WeekTimeline(
           controller: weekTimelineController,
         ),
-        Expanded( // TODO try the Card() Widget
-        child: PageView.builder(
+        Expanded(
+          child: PageView.builder(
             controller: timetableManagerProvider.pageController,
             onPageChanged: (index) {
               timetableManagerProvider.gotoIndex(index);
@@ -51,13 +51,13 @@ class _TimetablePageState extends State<TimetablePage> {
               final selectedDayLessons = profilesProvider.allLessonsOf(
                   day: timetableManagerProvider.indexToDay(index));
               return ListView.separated(
-                padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+                padding: const EdgeInsets.symmetric(horizontal: 8),
                 itemCount: selectedDayLessons.length,
                 itemBuilder: (context, index) {
                   return _LessonCard(lesson: selectedDayLessons[index]);
                 },
                 separatorBuilder: (BuildContext context, int index) {
-                  return const SizedBox(height: 8,);
+                  return const SizedBox(height: 8);
                 },
               );
             },
@@ -90,7 +90,7 @@ class _LessonCard extends StatelessWidget {
       child: SizedBox(
         height: 120,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
           child: DefaultTextStyle(
             style: TextStyle(
               color: Theme.of(context).colorScheme.onSecondaryContainer,
@@ -121,7 +121,9 @@ class _LessonCard extends StatelessWidget {
                   children: [
                     const Icon(Icons.place_outlined, size: 18),
                     const SizedBox(width: 8),
-                    Text('${lesson.room}, ${lesson.building} dsadasdasdasdasdasdasdasdasdasdasdasdasdadasdsa'),
+                    Expanded(
+                      child: Text('${lesson.room}, ${lesson.building}'),
+                    ),
                   ],
                 ),
               ],

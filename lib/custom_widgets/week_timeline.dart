@@ -31,7 +31,7 @@ class _WeekTimelineState extends State<WeekTimeline> with AutomaticKeepAliveClie
   void initState() {
     print('_WeekTimelineState.initState');
     super.initState();
-    _initWeeks(); // TODO SERIOUS performace problem, Optimize (avoid create every time i change page on bottom nav bar)
+    _initWeeks();
     widget.controller.addListener(_dateSelectionListener);
   }
 
@@ -137,7 +137,7 @@ class _DayTile extends StatelessWidget {
       child: GestureDetector(
           onTap: () => onTap(),
           child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 10),
             decoration: BoxDecoration(
               color: isSelected ? Theme.of(context).colorScheme.primaryContainer : null,
               borderRadius: BorderRadius.circular(14),
