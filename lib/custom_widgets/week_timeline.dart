@@ -16,7 +16,7 @@ class WeekTimeline extends StatefulWidget {
   State<WeekTimeline> createState() => _WeekTimelineState();
 }
 
-class _WeekTimelineState extends State<WeekTimeline> {
+class _WeekTimelineState extends State<WeekTimeline> with AutomaticKeepAliveClientMixin {
   static const int _viewableWeeksRadius = 250;
   static const int _totalWeeks = (_viewableWeeksRadius * 2) + 1;
   final int _currentWeekIndex = (_totalWeeks / 2).floor();
@@ -29,6 +29,7 @@ class _WeekTimelineState extends State<WeekTimeline> {
 
   @override
   void initState() {
+    print('_WeekTimelineState.initState');
     super.initState();
     _initWeeks(); // TODO SERIOUS performace problem, Optimize (avoid create every time i change page on bottom nav bar)
     widget.controller.addListener(_dateSelectionListener);
@@ -36,8 +37,9 @@ class _WeekTimelineState extends State<WeekTimeline> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return SizedBox(
-      height: 80,
+      height: 70,
       child: PageView.builder(
         controller: _pageController,
         scrollDirection: Axis.horizontal,
@@ -48,21 +50,21 @@ class _WeekTimelineState extends State<WeekTimeline> {
         itemBuilder: (context, index) {
           final selectedWeek = _weeks[index];
           final selectedWeekDates = selectedWeek.weekDates;
-          return Row(
-            children: separateWidgets(
-              startWithSeparator: true,
-              endWithSeparator: true,
-              widgets: List.generate(selectedWeekDates.length, (j) {
-                return _DayTile(
-                  date: selectedWeekDates[j],
-                  isSelected: _areDatesEqual(
-                      selectedWeekDates[j], widget.controller.selectedDate),
-                  onTap: () {
-                    widget.controller.selectedDate = selectedWeekDates[j];
-                  },
-                );
-              }),
-              separator: const Spacer(),
+          return Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Row(
+                children: List.generate(selectedWeekDates.length, (j) {
+                  return _DayTile(
+                    date: selectedWeekDates[j],
+                    isSelected: _areDatesEqual(
+                        selectedWeekDates[j], widget.controller.selectedDate),
+                    onTap: () {
+                      widget.controller.selectedDate = selectedWeekDates[j];
+                    },
+                  );
+                }),
+              ),
             ),
           );
         },
@@ -76,6 +78,9 @@ class _WeekTimelineState extends State<WeekTimeline> {
     widget.controller.removeListener(_dateSelectionListener);
     super.dispose();
   }
+
+  @override
+  bool get wantKeepAlive => true;
 
   void _dateSelectionListener() {
     setState(() {}); // Rebuild widget
@@ -125,23 +130,35 @@ class _DayTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => onTap(),
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-        decoration: BoxDecoration(
-          color: isSelected ? Theme.of(context).colorScheme.primaryContainer : null,
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(DateFormat.E().format(date)),
-            const SizedBox(height: 10),
-            Text('${date.day}'),
-          ],
-        ),
-      )
+    return Expanded(
+      child: GestureDetector(
+          onTap: () => onTap(),
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+            decoration: BoxDecoration(
+              color: isSelected ? Theme.of(context).colorScheme.primaryContainer : null,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: DefaultTextStyle(
+              style: TextStyle(
+                color: isSelected ? Theme.of(context).colorScheme.onPrimaryContainer
+                    : Theme.of(context).colorScheme.secondary,
+                fontWeight: FontWeight.bold,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(DateFormat.E().format(date)),
+                  const SizedBox(height: 8),
+                  FittedBox(
+                    fit: BoxFit.contain,
+                    child: Text('${date.day}', style: const TextStyle(fontSize: 26),),
+                  )
+                ],
+              ),
+            ),
+          )
+      ),
     );
   }
 }
