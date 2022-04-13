@@ -215,8 +215,8 @@ class UniudTimetableAPI {
             CourseLesson(
               startDateTime,
               endDateTime,
-              child.getAttribute('Aula')!,
               child.getAttribute('Sede')!,
+              child.getAttribute('Aula')!,
             )
           );
         }
