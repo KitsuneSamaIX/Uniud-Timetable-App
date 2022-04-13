@@ -1,74 +1,53 @@
 import 'package:flutter/material.dart';
+import 'package:uniud_timetable_app/custom_widgets/week_timeline.dart';
 
 class TimetableManager extends ChangeNotifier {
-  /// The radius of the viewable days in timeline with [DateTime.now] as pivot.
-  ///
-  /// |----[_viewableDaysRadius]----|--[DateTime.now]--|----[_viewableDaysRadius]----|
-  ///
-  /// The total number of viewable days will be: [_viewableDaysRadius]*2 + 1
-  /// Hence, the pivot will always be at the index [_viewableDaysRadius].
-  static const _viewableDaysRadius = 500;
+  var _selectedDate = _normalizeDate(DateTime.now());
 
-  final _pageController = PageController(initialPage: _viewableDaysRadius);
+  late final WeekTimelineController _weekTimelineController;
+  late final PageController _lessonsPageController;
 
-  final _pivotDay = _normalizeDay(DateTime.now());
-  late final DateTime _firstDay;
-  late final DateTime _lastDay;
-  late DateTime _selectedDay;
-
-  /// The default date/index of this manager is the current day.
   TimetableManager() {
-    _firstDay = _normalizeDay(_pivotDay.subtract(const Duration(days: _viewableDaysRadius)));
-    _lastDay = _normalizeDay(_pivotDay.add(const Duration(days: _viewableDaysRadius)));
-    _selectedDay = _pivotDay;
+    _weekTimelineController = WeekTimelineController(initialDate: _selectedDate);
+    _lessonsPageController = PageController(initialPage: 1000);
   }
 
   // PUBLIC API
 
-  /// Note: PageController index and selected day are always in sync.
-  PageController get pageController => _pageController;
+  WeekTimelineController get weekTimelineController => _weekTimelineController;
 
-  DateTime get firstDay => _firstDay;
+  PageController get lessonsPageController => _lessonsPageController;
 
-  DateTime get lastDay => _lastDay;
+  DateTime get selectedDate => _selectedDate;
 
-  /// Note: PageController index and selected day are always in sync.
-  DateTime get selectedDay => _selectedDay;
-
-  /// Note: PageController index and selected day are always in sync.
-  void gotoIndex(int index) {
-    _selectedDay = indexToDay(index);
-    _pageController.animateToPage(
-      index,
-      duration: const Duration(milliseconds: 200),
-      curve: Curves.easeOutCubic,
-    );
+  /// Goes to the specified date.
+  ///
+  /// This will automatically keep in sync the WeekTimeline's selected date and
+  /// the view of the selected date's lessons.
+  ///
+  /// Transition animations are also performed automatically.
+  void gotoDate(DateTime date) {
+    date = _normalizeDate(date);
+    _selectedDate = date;
+    _weekTimelineController.gotoDate(date);
+    // _lessonsPageController.animateToPage(
+    //   index, // TODO convert date to page index
+    //   duration: const Duration(milliseconds: 200),
+    //   curve: Curves.easeOutCubic,
+    // );
   }
 
-  /// Note: PageController index and selected day are always in sync.
-  void gotoDay(DateTime day) {
-    day = _normalizeDay(day);
-    _selectedDay = day;
-    _pageController.animateToPage(
-      dayToIndex(day),
-      duration: const Duration(milliseconds: 200),
-      curve: Curves.easeOutCubic,
-    );
+  @override
+  void dispose() {
+    _weekTimelineController.dispose();
+    _lessonsPageController.dispose();
+    super.dispose();
   }
+}
 
-  // UTILITY
-
-  /// Normalization prevents errors that originate from legal hour changes.
-  static DateTime _normalizeDay(DateTime day) {
-    return DateTime(day.year, day.month, day.day, 12);
-  }
-
-  DateTime indexToDay(int index) {
-    return _firstDay.add(Duration(days: index));
-  }
-
-  int dayToIndex(DateTime day) {
-    day = _normalizeDay(day);
-    return day.difference(_firstDay).inDays;
-  }
+/// Returns the normalized date.
+///
+/// This is useful to avoid potential errors with daylight saving time.
+DateTime _normalizeDate(DateTime date) {
+  return DateTime(date.year, date.month, date.day, 12);
 }

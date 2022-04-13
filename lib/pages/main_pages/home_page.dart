@@ -87,7 +87,7 @@ class _HomePageState extends State<HomePage> {
               child: Visibility(
                 visible: _selectedPageIndex == 0,
                 child: IconButton(
-                  onPressed: () => _timetableManager.gotoDay(DateTime.now()),
+                  onPressed: () => _timetableManager.gotoDate(DateTime.now()),
                   color: Theme.of(context).colorScheme.secondary,
                   iconSize: 32,
                   icon: const Icon(Icons.today),
@@ -146,6 +146,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void dispose() {
     _pageController.dispose();
+    _timetableManager.dispose();
     super.dispose();
   }
 }
@@ -254,5 +255,3 @@ class _SettingsOpenContainer extends StatelessWidget {
     );
   }
 }
-
-// Utility

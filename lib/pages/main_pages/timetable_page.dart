@@ -1,4 +1,3 @@
-import 'package:calendar_timeline/calendar_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:uniud_timetable_app/custom_widgets/week_timeline.dart';
@@ -14,7 +13,7 @@ class TimetablePage extends StatefulWidget {
 }
 
 class _TimetablePageState extends State<TimetablePage> {
-  final weekTimelineController = WeekTimelineController(initialDate: DateTime.now());
+  final _weekTimelineController = WeekTimelineController(initialDate: DateTime.now());
 
   @override
   Widget build(BuildContext context) {
@@ -23,33 +22,18 @@ class _TimetablePageState extends State<TimetablePage> {
 
     return Column(
       children: [
-        // CalendarTimeline(
-        //   initialDate: timetableManagerProvider.selectedDay,
-        //   firstDate: timetableManagerProvider.firstDay,
-        //   lastDate: timetableManagerProvider.lastDay,
-        //   onDateSelected: (day) {
-        //     if (day != null) {
-        //       timetableManagerProvider.gotoDay(day);
-        //     }
-        //   },
-        //   leftMargin: 60,
-        //   monthColor: Theme.of(context).colorScheme.secondary,
-        //   dayColor: Theme.of(context).colorScheme.secondary,
-        //   activeDayColor: Theme.of(context).colorScheme.onPrimaryContainer,
-        //   activeBackgroundDayColor: Theme.of(context).colorScheme.primaryContainer,
-        // ),
         WeekTimeline(
-          controller: weekTimelineController,
+          controller: _weekTimelineController,
         ),
         Expanded(
           child: PageView.builder(
-            controller: timetableManagerProvider.pageController,
+            controller: timetableManagerProvider.lessonsPageController,
             onPageChanged: (index) {
-              timetableManagerProvider.gotoIndex(index);
+              // timetableManagerProvider.gotoIndex(index); TODO convert index to date
             },
             itemBuilder: (context, index) {
               final selectedDayLessons = profilesProvider.allLessonsOf(
-                  day: timetableManagerProvider.indexToDay(index));
+                  day: timetableManagerProvider.selectedDate); // TODO use index here
               return ListView.separated(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 itemCount: selectedDayLessons.length,
@@ -65,6 +49,12 @@ class _TimetablePageState extends State<TimetablePage> {
         ),
       ],
     );
+  }
+
+  @override
+  void dispose() {
+    _weekTimelineController.dispose();
+    super.dispose();
   }
 }
 

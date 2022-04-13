@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:uniud_timetable_app/common/common.dart' show separateWidgets;
 
 class WeekTimeline extends StatefulWidget {
   final WeekTimelineController controller;
@@ -17,21 +16,17 @@ class WeekTimeline extends StatefulWidget {
 }
 
 class _WeekTimelineState extends State<WeekTimeline> with AutomaticKeepAliveClientMixin {
-  static const int _viewableWeeksRadius = 250;
+  static const int _viewableWeeksRadius = 1000;
   static const int _totalWeeks = (_viewableWeeksRadius * 2) + 1;
   final int _currentWeekIndex = (_totalWeeks / 2).floor();
 
   final DateTime _currentDate = _normalizeDate(DateTime.now());
 
-  late final List<_Week> _weeks;
-
   late final _pageController = PageController(initialPage: _currentWeekIndex);
 
   @override
   void initState() {
-    print('_WeekTimelineState.initState');
     super.initState();
-    _initWeeks();
     widget.controller.addListener(_dateSelectionListener);
   }
 
@@ -39,38 +34,39 @@ class _WeekTimelineState extends State<WeekTimeline> with AutomaticKeepAliveClie
   Widget build(BuildContext context) {
     super.build(context);
     return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
-      child: SizedBox(
-        height: 70,
-        child: PageView.builder(
-          controller: _pageController,
-          scrollDirection: Axis.horizontal,
-          onPageChanged: (index) {
-            widget.controller.selectedDate = _weeks[index]
-                .weekDates[widget.controller.selectedDate.weekday-1];
-          },
-          itemBuilder: (context, index) {
-            final selectedWeek = _weeks[index];
-            final selectedWeekDates = selectedWeek.weekDates;
-            return Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Row(
-                  children: List.generate(selectedWeekDates.length, (j) {
-                    return _DayTile(
-                      date: selectedWeekDates[j],
-                      isSelected: _areDatesEqual(
-                          selectedWeekDates[j], widget.controller.selectedDate),
-                      onTap: () {
-                        widget.controller.selectedDate = selectedWeekDates[j];
-                      },
-                    );
-                  }),
-                ),
-              ),
-            );
-          },
-        ),
+      padding: const EdgeInsets.fromLTRB(8, 0, 8, 10),
+      child: Column(
+        children: [
+          _WeekTimelineHeader(week: _Week.fromPreviousMondayOf(
+              date: widget.controller.selectedDate)),
+          SizedBox(
+            height: 70,
+            child: PageView.builder(
+              controller: _pageController,
+              scrollDirection: Axis.horizontal,
+              onPageChanged: (index) =>
+                  widget.controller.gotoDate(_getWeekBy(index: index)
+                      .weekDates[widget.controller.selectedDate.weekday-1]),
+              itemBuilder: (context, index) {
+                final selectedWeek = _getWeekBy(index: index);
+                final selectedWeekDates = selectedWeek.weekDates;
+                return Expanded(
+                  child: Row(
+                    children: List.generate(selectedWeekDates.length, (j) {
+                      return _DayTile(
+                        date: selectedWeekDates[j],
+                        isSelected: _areDatesEqual(
+                            selectedWeekDates[j], widget.controller.selectedDate),
+                        onTap: () =>
+                            widget.controller.gotoDate(selectedWeekDates[j]),
+                      );
+                    }),
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -92,30 +88,45 @@ class _WeekTimelineState extends State<WeekTimeline> with AutomaticKeepAliveClie
     }
   }
 
-  void _initWeeks() {
-    // Note: we generate the weeks starting from the pivot to be resilient
-    // against daylight saving hours.
-    List<_Week> weeks = List.filled(
-      _totalWeeks,
-      _Week(weekFirstDate: DateTime(0)), // This is a placeholder
-      growable: false,
+  /// Lazily generates the week from the index.
+  _Week _getWeekBy({required int index}) {
+    // Get current week
+    final currentWeek = _Week.fromPreviousMondayOf(date: _currentDate);
+
+    // From current week's first date compute the required week
+    final distanceInWeeks = index - _currentWeekIndex;
+    final distanceInDays = distanceInWeeks * 7; // A week has 7 days
+    final requiredWeek = _Week.fromPreviousMondayOf(
+        date: currentWeek.weekFirstDate.add(Duration(days: distanceInDays)));
+
+    return requiredWeek;
+  }
+}
+
+class _WeekTimelineHeader extends StatelessWidget {
+  final _Week week;
+
+  const _WeekTimelineHeader({
+    Key? key,
+    required this.week,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) { // TODO FIX Widget layout problems
+    return Divider();SizedBox(
+      height: 50,
+      // child: Expanded(
+        child: Row(
+          children: [
+            const Icon(Icons.calendar_today_rounded, size: 18,),
+            const SizedBox(width: 10,),
+            const Text('Week '),
+            Text('${week.weekFirstDate.day}-${week.weekDates.last.day} '),
+            Text(DateFormat.MMMM().format(week.weekDates.last)),
+          ],
+        ),
+      // ),
     );
-
-    // Generate current week
-    weeks[_currentWeekIndex] = _Week.fromPreviousMondayOf(date: _currentDate);
-
-    // Generate weeks before current week
-    for (int i = _currentWeekIndex-1; i > 0; i--) {
-      weeks[i] = weeks[i+1].previousWeek;
-    }
-
-    // Generate weeks after current week
-    for (int i = _currentWeekIndex+1; i < _totalWeeks; i++) {
-      weeks[i] = weeks[i-1].nextWeek;
-    }
-
-    // Set weeks
-    _weeks = weeks;
   }
 }
 
@@ -176,10 +187,12 @@ class WeekTimelineController extends ChangeNotifier {
 
   // PUBLIC API
 
+  /// The selected date.
   DateTime get selectedDate => _selectedDate;
 
-  set selectedDate(DateTime date) {
-    _selectedDate = _normalizeDate(date);
+  void gotoDate(DateTime date) {
+    date = _normalizeDate(date);
+    _selectedDate = date;
     notifyListeners();
   }
 }
@@ -200,18 +213,11 @@ bool _areDatesEqual(DateTime date1, DateTime date2) {
 class _Week {
   final DateTime weekFirstDate;
 
-  /// Creates a new Week instance.
-  ///
-  /// A week is composed of 7 dates starting from [weekFirstDate].
-  ///
-  /// [weekFirstDate] should be a Monday.
-  _Week({
-    required DateTime weekFirstDate,
-  }) : weekFirstDate = _normalizeDate(weekFirstDate);
-
   /// Creates a new Week instance where the first day is the previous Monday
-  /// with respect to the passed [date] or the passed [date] itself if it is a
-  /// Monday.
+  /// with respect to the passed [date] or the passed [date] itself if it is
+  /// already Monday.
+  ///
+  /// A week is composed of 7 days starting from [weekFirstDate].
   _Week.fromPreviousMondayOf({
     required DateTime date,
   }) : weekFirstDate = _previousMondayOf(date);
@@ -252,14 +258,7 @@ DateTime _previousMondayOf(DateTime date) {
     date = date.subtract(const Duration(days: 1));
     dateDayName = DateFormat.EEEE().format(date);
   }
-  return _normalizeDate(date);
-}
-
-DateTimeRange _normalizeDateRange(DateTimeRange dateRange) {
-  return DateTimeRange(
-    start: _normalizeDate(dateRange.start),
-    end: _normalizeDate(dateRange.end),
-  );
+  return date;
 }
 
 /// Returns the normalized date.
