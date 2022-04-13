@@ -33,8 +33,8 @@ class _WeekTimelineState extends State<WeekTimeline> with AutomaticKeepAliveClie
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(8, 0, 8, 10),
+    return Container(
+      padding: const EdgeInsets.fromLTRB(6, 0, 6, 10),
       child: Column(
         children: [
           _WeekTimelineHeader(week: _Week.fromPreviousMondayOf(
@@ -50,18 +50,16 @@ class _WeekTimelineState extends State<WeekTimeline> with AutomaticKeepAliveClie
               itemBuilder: (context, index) {
                 final selectedWeek = _getWeekBy(index: index);
                 final selectedWeekDates = selectedWeek.weekDates;
-                return Expanded(
-                  child: Row(
-                    children: List.generate(selectedWeekDates.length, (j) {
-                      return _DayTile(
-                        date: selectedWeekDates[j],
-                        isSelected: _areDatesEqual(
-                            selectedWeekDates[j], widget.controller.selectedDate),
-                        onTap: () =>
-                            widget.controller.gotoDate(selectedWeekDates[j]),
-                      );
-                    }),
-                  ),
+                return Row(
+                  children: List.generate(selectedWeekDates.length, (j) {
+                    return _DayTile(
+                      date: selectedWeekDates[j],
+                      isSelected: _areDatesEqual(
+                          selectedWeekDates[j], widget.controller.selectedDate),
+                      onTap: () =>
+                          widget.controller.gotoDate(selectedWeekDates[j]),
+                    );
+                  }),
                 );
               },
             ),
@@ -112,20 +110,18 @@ class _WeekTimelineHeader extends StatelessWidget {
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) { // TODO FIX Widget layout problems
-    return Divider();SizedBox(
-      height: 50,
-      // child: Expanded(
-        child: Row(
-          children: [
-            const Icon(Icons.calendar_today_rounded, size: 18,),
-            const SizedBox(width: 10,),
-            const Text('Week '),
-            Text('${week.weekFirstDate.day}-${week.weekDates.last.day} '),
-            Text(DateFormat.MMMM().format(week.weekDates.last)),
-          ],
-        ),
-      // ),
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+      child: Row(
+        children: [
+          const Icon(Icons.calendar_today_rounded, size: 18,),
+          const SizedBox(width: 10,),
+          const Text('Week '),
+          Text('${week.weekFirstDate.day}-${week.weekDates.last.day} '),
+          Text(DateFormat.MMMM().format(week.weekDates.last)),
+        ],
+      ),
     );
   }
 }
