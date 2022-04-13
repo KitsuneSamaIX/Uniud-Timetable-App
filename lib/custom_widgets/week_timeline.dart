@@ -17,8 +17,8 @@ class WeekTimeline extends StatefulWidget {
 
 class _WeekTimelineState extends State<WeekTimeline> with AutomaticKeepAliveClientMixin {
   static const int _viewableWeeksRadius = 1000;
-  static const int _totalWeeks = (_viewableWeeksRadius * 2) + 1;
-  final int _currentWeekIndex = (_totalWeeks / 2).floor();
+  static const int _totalViewableWeeks = (_viewableWeeksRadius * 2) + 1;
+  final int _currentWeekIndex = (_totalViewableWeeks / 2).floor();
 
   final DateTime _currentDate = _normalizeDate(DateTime.now());
 
