@@ -6,11 +6,13 @@ class TimetableManager extends ChangeNotifier {
   static const int _totalViewableDates = (_viewableDatesRadius * 2) + 1;
   final int _currentDateIndex = (_totalViewableDates / 2).floor();
 
+  final DateTime _currentDate = _normalizeDate(DateTime.now());
+
   late final WeekTimelineController _weekTimelineController;
   late final PageController _lessonsPageController;
 
   TimetableManager() {
-    _weekTimelineController = WeekTimelineController(initialDate: DateTime.now());
+    _weekTimelineController = WeekTimelineController(initialDate: _currentDate);
     _lessonsPageController = PageController(initialPage: _currentDateIndex);
   }
 
@@ -33,20 +35,25 @@ class TimetableManager extends ChangeNotifier {
 
     _weekTimelineController.gotoDate(date);
 
-    // _lessonsPageController.animateToPage(
-    //   index, // TODO convert date to page index
-    //   duration: const Duration(milliseconds: 200),
-    //   curve: Curves.easeOutCubic,
-    // );
+    _lessonsPageController.animateToPage(
+      dateToLessonsPageIndex(date),
+      duration: const Duration(milliseconds: 200),
+      curve: Curves.easeOutCubic,
+    );
+
+    notifyListeners(); // TODO check if this is needed (i think yes)
   }
 
   int dateToLessonsPageIndex(DateTime date) {
     date = _normalizeDate(date);
-    // TODO implement
+
+    final difference = _currentDate.difference(date).inDays;
+    return _currentDateIndex - difference;
   }
 
   DateTime lessonsPageIndexToDate(int index) {
-    // TODO implement
+    final difference = index - _currentDateIndex;
+    return _currentDate.add(Duration(days: difference));
   }
 
   @override

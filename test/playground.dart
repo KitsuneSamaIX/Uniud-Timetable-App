@@ -24,5 +24,12 @@ void main() {
     print('currentdDateTimeUTC + 1.000 days = ${currentdDateTimeUTC.add(const Duration(days: 1000))}');
     print('currentdDateTimeUTC + 10.000 days = ${currentdDateTimeUTC.add(const Duration(days: 10000))}');
     print('currentdDateTimeUTC + 100.000 days = ${currentdDateTimeUTC.add(const Duration(days: 100000))}');
+
+
+    print('');
+    print('');
+    print('');
+
+    print('difference test: ${DateTime.now().difference(DateTime.now().add(const Duration(days: 1))).inDays}');
   });
 }
