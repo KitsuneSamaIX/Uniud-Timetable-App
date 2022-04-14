@@ -66,10 +66,9 @@ class _LessonCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final timeSlotString =
-        '${lesson.startDateTime.hour}:'
-        '${lesson.startDateTime.minute} -> '
-        '${lesson.endDateTime.hour}:'
+    final startTimeString = '${lesson.startDateTime.hour}:'
+        '${lesson.startDateTime.minute}';
+    final endTimeString = '${lesson.endDateTime.hour}:'
         '${lesson.endDateTime.minute}';
 
     return Card(
@@ -79,42 +78,52 @@ class _LessonCard extends StatelessWidget {
         height: 120,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          child: DefaultTextStyle(
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.onSecondaryContainer,
-              fontSize: 14.5,
-              overflow: TextOverflow.ellipsis,
+          child: IconTheme(
+            data: IconThemeData(
+              size: 18,
+              color: Theme.of(context).colorScheme.tertiary,
             ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(lesson.course!.name + '\n',
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.primary,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  maxLines: 2,
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    const Icon(Icons.access_time_rounded, size: 18),
-                    const SizedBox(width: 8),
-                    Text(timeSlotString),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    const Icon(Icons.place_outlined, size: 18),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text('${lesson.room}, ${lesson.building}'),
+            child: DefaultTextStyle(
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSecondaryContainer,
+                fontSize: 14.5,
+                overflow: TextOverflow.ellipsis,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(lesson.course!.name + '\n',
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.bold,
                     ),
-                  ],
-                ),
-              ],
+                    maxLines: 2,
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      const Icon(Icons.access_time_rounded),
+                      const SizedBox(width: 8),
+                      Text('$startTimeString '),
+                      Icon(Icons.arrow_forward_rounded,
+                        color: Theme.of(context).colorScheme.onSecondaryContainer,
+                      ),
+                      Text(' $endTimeString'),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  Row(
+                    children: [
+                      const Icon(Icons.place_outlined),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text('${lesson.room}, ${lesson.building}'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
