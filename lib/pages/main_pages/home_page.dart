@@ -133,7 +133,7 @@ class _HomePageState extends State<HomePage> {
           }
         }),
         children: [
-          ChangeNotifierProvider.value(
+          Provider.value(
             value: _timetableManager,
             child: const TimetablePage(),
           ),

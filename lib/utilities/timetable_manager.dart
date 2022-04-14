@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:uniud_timetable_app/custom_widgets/week_timeline.dart';
 
-class TimetableManager extends ChangeNotifier {
-  static const int _viewableDatesRadius = 1000 * 7; // TODO maybe should link with the 1000 with the _viewableWeeksRadius constant
+class TimetableManager {
+  static const int _viewableDatesRadius = 1000 * 7; // TODO maybe I should link this '1000' with the _viewableWeeksRadius constant
   static const int _totalViewableDates = (_viewableDatesRadius * 2) + 1;
   final int _currentDateIndex = (_totalViewableDates / 2).floor();
 
@@ -34,19 +34,22 @@ class TimetableManager extends ChangeNotifier {
     date = _normalizeDate(date);
 
     _weekTimelineController.gotoDate(date);
-    // lessonsPageControllerAnimateToPage(dateToLessonsPageIndex(date));
-
-    // notifyListeners(); // TODO check if this is needed (i think no) (maybe this doesn't need to be ChangeNotifier)
+    // No need to also call lessonsPageController.animateToPage (or jumpToPage),
+    // calling WeekTimelineController.gotoDate will trigger the onDateSelected
+    // callback defined for the WeekTimeline widget, the callback will be
+    // responsible for the call of lessonsPageController.animateToPage.
   }
 
-  /// Convenience method with predefined animation parameters.
-  void lessonsPageControllerAnimateToPage(int page) {
-    _lessonsPageController.jumpToPage(page); // TODO THIS IS THE FIX (animate to page seems to trigger onPageChanged for every page in its path)
-    // _lessonsPageController.animateToPage(
-    //   page,
-    //   duration: const Duration(milliseconds: 200),
-    //   curve: Curves.easeOutCubic,
-    // );
+  /// Convenience method that calls [PageController.animateToPage] with
+  /// predefined animation parameters.
+  ///
+  /// This method returns the result of the call to [PageController.animateToPage].
+  Future<void> lessonsPageControllerAnimateToPage(int page) {
+    return _lessonsPageController.animateToPage(
+      page,
+      duration: const Duration(milliseconds: 250),
+      curve: Curves.easeOutCubic,
+    );
   }
 
   // CONVERSIONS
@@ -65,11 +68,9 @@ class TimetableManager extends ChangeNotifier {
 
   // DISPOSE
 
-  @override
   void dispose() {
     _weekTimelineController.dispose();
     _lessonsPageController.dispose();
-    super.dispose();
   }
 }
 

@@ -188,8 +188,11 @@ class WeekTimelineController extends ChangeNotifier {
 
   void gotoDate(DateTime date) {
     date = _normalizeDate(date);
-    _selectedDate = date;
-    notifyListeners();
+    // This check could prevent undesired loops and also improves performance
+    if (!_areDatesEqual(date, _selectedDate)) {
+      _selectedDate = date;
+      notifyListeners();
+    }
   }
 }
 
