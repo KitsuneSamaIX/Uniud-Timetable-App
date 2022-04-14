@@ -35,7 +35,7 @@ class _TimetablePageState extends State<TimetablePage> {
             },
             itemBuilder: (context, index) {
               final selectedDayLessons = profilesProvider.allLessonsOf(
-                  day: timetableManagerProvider.lessonsPageIndexToDate(index));
+                  date: timetableManagerProvider.lessonsPageIndexToDate(index));
               return ListView.separated(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 itemCount: selectedDayLessons.length,

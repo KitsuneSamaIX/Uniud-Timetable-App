@@ -33,16 +33,16 @@ class Profiles extends ChangeNotifier {
   /// These are guaranteed to be sorted by [CourseLesson.startDateTime] using [List.sort].
   List<CourseLesson> get allLessons => _allLessons;
 
-  /// Return all lessons for the specified [day].
+  /// Return all lessons for the specified [date].
   ///
   /// These are guaranteed to be sorted by [CourseLesson.startDateTime] using [List.sort].
-  List<CourseLesson> allLessonsOf({required DateTime day}) {
+  List<CourseLesson> allLessonsOf({required DateTime date}) {
     List<CourseLesson> result = [];
     for (final lesson in _allLessons) {
       // The order of comparison is for optimization (short-circuit evaluation)
-      if (lesson.startDateTime.day == day.day &&
-          lesson.startDateTime.month == day.month &&
-          lesson.startDateTime.year == day.year) {
+      if (lesson.startDateTime.day == date.day &&
+          lesson.startDateTime.month == date.month &&
+          lesson.startDateTime.year == date.year) {
         result.add(lesson);
       }
     }
