@@ -149,12 +149,22 @@ class _WeekTimelineHeader extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const Icon(Icons.calendar_today_rounded, size: 18,),
+          Icon(Icons.calendar_today_rounded,
+            size: 21,
+            color: Theme.of(context).colorScheme.tertiary,
+          ),
           const SizedBox(width: 10,),
-          const Text('Week '),
-          Text('${week.weekFirstDate.day}-${week.weekDates.last.day} '),
-          Text(DateFormat.MMMM().format(week.weekDates.last)),
+          Text(
+            '${week.weekFirstDate.day} - ${week.weekDates.last.day} '
+                '${DateFormat.MMMM().format(week.weekDates.last)}',
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.tertiary,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ],
       ),
     );
