@@ -42,11 +42,13 @@ class _WeekTimelineState extends State<WeekTimeline> with AutomaticKeepAliveClie
           SizedBox(
             height: 70,
             child: PageView.builder(
+              physics: const NeverScrollableScrollPhysics(),
               controller: _pageController,
               scrollDirection: Axis.horizontal,
-              onPageChanged: (index) =>
-                  widget.controller.gotoDate(_getWeekBy(index: index)
-                      .weekDates[widget.controller.selectedDate.weekday-1]),
+              // TODO find a way to make this work
+              // onPageChanged: (index) =>
+              //     widget.controller.gotoDate(_getWeekBy(index: index)
+              //         .weekDates[widget.controller.selectedDate.weekday-1]),
               itemBuilder: (context, index) {
                 final selectedWeek = _getWeekBy(index: index);
                 final selectedWeekDates = selectedWeek.weekDates;
@@ -81,12 +83,21 @@ class _WeekTimelineState extends State<WeekTimeline> with AutomaticKeepAliveClie
 
   void _dateSelectionListener() {
     setState(() {}); // Rebuild widget
+    // Check if it is required to animate to another page
+    if (!_getWeekBy(index: _pageController.page!.floor())
+        .contains(widget.controller.selectedDate)) {
+      _pageController.animateToPage(
+        _getIndexBy(date: widget.controller.selectedDate),
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeOutCubic,
+      );
+    }
     if (widget.onDateSelected != null) {
       widget.onDateSelected!(widget.controller.selectedDate);
     }
   }
 
-  /// Lazily generates the week from the index.
+  /// Lazily generates the week from its index.
   _Week _getWeekBy({required int index}) {
     // Get current week
     final currentWeek = _Week.fromPreviousMondayOf(date: _currentDate);
@@ -98,6 +109,26 @@ class _WeekTimelineState extends State<WeekTimeline> with AutomaticKeepAliveClie
         date: currentWeek.weekFirstDate.add(Duration(days: distanceInDays)));
 
     return requiredWeek;
+  }
+
+  /// Returns the index of the week that contains the specified date.
+  int _getIndexBy({required DateTime date}) {
+    date = _normalizeDate(date);
+
+    // Get the week that contains the date
+    final week = _Week.fromPreviousMondayOf(date: date);
+
+    // Get the current week
+    final currentWeek = _Week.fromPreviousMondayOf(date: _currentDate);
+
+    // Compute the difference in days from the first dates of the two weeks
+    final differenceInDays = week.weekFirstDate.difference(currentWeek.weekFirstDate).inDays;
+
+    // Convert the difference in weeks
+    final differenceInWeeks = (differenceInDays / 7).floor();
+
+    // Compute the index and return it
+    return _currentWeekIndex + differenceInWeeks;
   }
 }
 
