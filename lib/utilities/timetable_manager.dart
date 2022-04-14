@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:uniud_timetable_app/custom_widgets/week_timeline.dart';
 
 class TimetableManager {
-  static const int _viewableDatesRadius = 1000 * 7; // TODO maybe I should link this '1000' with the _viewableWeeksRadius constant
+  static const int _viewableDatesRadius = 1000 * 7; // TODO maybe I should link this '1000' with the _viewableWeeksRadius constant inside _weekTimelineController
   static const int _totalViewableDates = (_viewableDatesRadius * 2) + 1;
   final int _currentDateIndex = (_totalViewableDates / 2).floor();
 
