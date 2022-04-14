@@ -23,6 +23,7 @@ class TimetableManager {
   WeekTimelineController get weekTimelineController => _weekTimelineController;
 
   PageController get lessonsPageController => _lessonsPageController;
+  bool lessonsPageControllerIsAnimatingToPage = false;
 
   /// Goes to the specified date.
   ///
@@ -45,11 +46,12 @@ class TimetableManager {
   ///
   /// This method returns the result of the call to [PageController.animateToPage].
   Future<void> lessonsPageControllerAnimateToPage(int page) {
+    lessonsPageControllerIsAnimatingToPage = true;
     return _lessonsPageController.animateToPage(
       page,
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeOutCubic,
-    );
+    ).whenComplete(() => lessonsPageControllerIsAnimatingToPage = false);
   }
 
   // CONVERSIONS

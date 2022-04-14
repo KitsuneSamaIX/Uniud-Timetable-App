@@ -27,32 +27,28 @@ class _TimetablePageState extends State<TimetablePage> {
                   timetableManagerProvider.dateToLessonsPageIndex(date)),
         ),
         Expanded(
-          child: NotificationListener<ScrollNotification>(
-            onNotification: (ScrollNotification notification) {
-              if (notification.depth == 0 && notification is ScrollEndNotification) {
+          child: PageView.builder(
+            controller: timetableManagerProvider.lessonsPageController,
+            onPageChanged: (index) {
+              if (!timetableManagerProvider.lessonsPageControllerIsAnimatingToPage) {
                 timetableManagerProvider.weekTimelineController.gotoDate(
-                    timetableManagerProvider.lessonsPageIndexToDate(
-                        timetableManagerProvider.lessonsPageController.page!.floor()));
+                    timetableManagerProvider.lessonsPageIndexToDate(index));
               }
-              return false;
             },
-            child: PageView.builder(
-              controller: timetableManagerProvider.lessonsPageController,
-              itemBuilder: (context, index) {
-                final selectedDayLessons = profilesProvider.allLessonsOf(
-                    date: timetableManagerProvider.lessonsPageIndexToDate(index));
-                return ListView.separated(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  itemCount: selectedDayLessons.length,
-                  itemBuilder: (context, index) {
-                    return _LessonCard(lesson: selectedDayLessons[index]);
-                  },
-                  separatorBuilder: (BuildContext context, int index) {
-                    return const SizedBox(height: 8);
-                  },
-                );
-              },
-            ),
+            itemBuilder: (context, index) {
+              final selectedDayLessons = profilesProvider.allLessonsOf(
+                  date: timetableManagerProvider.lessonsPageIndexToDate(index));
+              return ListView.separated(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                itemCount: selectedDayLessons.length,
+                itemBuilder: (context, index) {
+                  return _LessonCard(lesson: selectedDayLessons[index]);
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return const SizedBox(height: 8);
+                },
+              );
+            },
           ),
         ),
       ],
