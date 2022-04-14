@@ -13,8 +13,6 @@ class TimetablePage extends StatefulWidget {
 }
 
 class _TimetablePageState extends State<TimetablePage> {
-  final _weekTimelineController = WeekTimelineController(initialDate: DateTime.now());
-
   @override
   Widget build(BuildContext context) {
     final timetableManagerProvider = Provider.of<TimetableManager>(context);
@@ -23,17 +21,21 @@ class _TimetablePageState extends State<TimetablePage> {
     return Column(
       children: [
         WeekTimeline(
-          controller: _weekTimelineController,
+          controller: timetableManagerProvider.weekTimelineController,
+          onDateSelected: (date) =>
+              timetableManagerProvider.lessonsPageControllerAnimateToPage(
+                  timetableManagerProvider.dateToLessonsPageIndex(date)),
         ),
         Expanded(
           child: PageView.builder(
             controller: timetableManagerProvider.lessonsPageController,
             onPageChanged: (index) {
-              // timetableManagerProvider.gotoIndex(index); TODO convert index to date
+              timetableManagerProvider.weekTimelineController
+                  .gotoDate(timetableManagerProvider.lessonsPageIndexToDate(index));
             },
             itemBuilder: (context, index) {
               final selectedDayLessons = profilesProvider.allLessonsOf(
-                  day: timetableManagerProvider.selectedDate); // TODO use index here
+                  day: timetableManagerProvider.lessonsPageIndexToDate(index));
               return ListView.separated(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 itemCount: selectedDayLessons.length,
@@ -49,12 +51,6 @@ class _TimetablePageState extends State<TimetablePage> {
         ),
       ],
     );
-  }
-
-  @override
-  void dispose() {
-    _weekTimelineController.dispose();
-    super.dispose();
   }
 }
 

@@ -34,15 +34,22 @@ class TimetableManager extends ChangeNotifier {
     date = _normalizeDate(date);
 
     _weekTimelineController.gotoDate(date);
+    // lessonsPageControllerAnimateToPage(dateToLessonsPageIndex(date));
 
-    _lessonsPageController.animateToPage(
-      dateToLessonsPageIndex(date),
-      duration: const Duration(milliseconds: 200),
-      curve: Curves.easeOutCubic,
-    );
-
-    notifyListeners(); // TODO check if this is needed (i think yes)
+    // notifyListeners(); // TODO check if this is needed (i think no) (maybe this doesn't need to be ChangeNotifier)
   }
+
+  /// Convenience method with predefined animation parameters.
+  void lessonsPageControllerAnimateToPage(int page) {
+    _lessonsPageController.jumpToPage(page); // TODO THIS IS THE FIX (animate to page seems to trigger onPageChanged for every page in its path)
+    // _lessonsPageController.animateToPage(
+    //   page,
+    //   duration: const Duration(milliseconds: 200),
+    //   curve: Curves.easeOutCubic,
+    // );
+  }
+
+  // CONVERSIONS
 
   int dateToLessonsPageIndex(DateTime date) {
     date = _normalizeDate(date);
@@ -55,6 +62,8 @@ class TimetableManager extends ChangeNotifier {
     final difference = index - _currentDateIndex;
     return _currentDate.add(Duration(days: difference));
   }
+
+  // DISPOSE
 
   @override
   void dispose() {

@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 
 class WeekTimeline extends StatefulWidget {
   final WeekTimelineController controller;
-  final void Function()? onDateSelected;
+  final void Function(DateTime date)? onDateSelected;
 
   const WeekTimeline({
     Key? key,
@@ -82,7 +82,7 @@ class _WeekTimelineState extends State<WeekTimeline> with AutomaticKeepAliveClie
   void _dateSelectionListener() {
     setState(() {}); // Rebuild widget
     if (widget.onDateSelected != null) {
-      widget.onDateSelected!();
+      widget.onDateSelected!(widget.controller.selectedDate);
     }
   }
 
