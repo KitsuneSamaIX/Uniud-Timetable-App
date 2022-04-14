@@ -47,7 +47,7 @@ class TimetableManager {
   Future<void> lessonsPageControllerAnimateToPage(int page) {
     return _lessonsPageController.animateToPage(
       page,
-      duration: const Duration(milliseconds: 250),
+      duration: const Duration(milliseconds: 300),
       curve: Curves.easeOutCubic,
     );
   }

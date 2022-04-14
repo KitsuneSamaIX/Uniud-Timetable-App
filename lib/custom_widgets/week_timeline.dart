@@ -24,6 +24,8 @@ class _WeekTimelineState extends State<WeekTimeline> with AutomaticKeepAliveClie
 
   late final _pageController = PageController(initialPage: _currentWeekIndex);
 
+  bool _isAnimatingToPage = false;
+
   @override
   void initState() {
     super.initState();
@@ -42,13 +44,14 @@ class _WeekTimelineState extends State<WeekTimeline> with AutomaticKeepAliveClie
           SizedBox(
             height: 70,
             child: PageView.builder(
-              physics: const NeverScrollableScrollPhysics(),
               controller: _pageController,
               scrollDirection: Axis.horizontal,
-              // TODO find a way to make this work
-              // onPageChanged: (index) =>
-              //     widget.controller.gotoDate(_getWeekBy(index: index)
-              //         .weekDates[widget.controller.selectedDate.weekday-1]),
+              onPageChanged: (index) {
+                if (!_isAnimatingToPage) {
+                  widget.controller.gotoDate(_getWeekBy(index: index)
+                      .weekDates[widget.controller.selectedDate.weekday-1]);
+                }
+              },
               itemBuilder: (context, index) {
                 final selectedWeek = _getWeekBy(index: index);
                 final selectedWeekDates = selectedWeek.weekDates;
@@ -86,11 +89,12 @@ class _WeekTimelineState extends State<WeekTimeline> with AutomaticKeepAliveClie
     // Check if it is required to animate to another page
     if (!_getWeekBy(index: _pageController.page!.floor())
         .contains(widget.controller.selectedDate)) {
+      _isAnimatingToPage = true;
       _pageController.animateToPage(
         _getIndexBy(date: widget.controller.selectedDate),
         duration: const Duration(milliseconds: 250),
         curve: Curves.easeOutCubic,
-      );
+      ).whenComplete(() => _isAnimatingToPage = false);
     }
     if (widget.onDateSelected != null) {
       widget.onDateSelected!(widget.controller.selectedDate);
