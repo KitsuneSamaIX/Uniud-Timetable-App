@@ -98,9 +98,9 @@ class Profiles extends ChangeNotifier {
     saveProfiles();
   }
 
-  /// Deletes the specified [profile] from the Set,
-  /// (deletion is based on == operator).
-  void deleteProfile(Profile profile) {
+  /// Removes the specified [profile] from the Set,
+  /// (removal is based on == operator).
+  void removeProfile(Profile profile) {
     _profilesWrapper.profiles.remove(profile);
 
     // Update

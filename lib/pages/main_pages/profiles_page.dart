@@ -13,13 +13,12 @@ class _ProfilesPageState extends State<ProfilesPage> {
   @override
   Widget build(BuildContext context) {
     final profilesProvider = Provider.of<Profiles>(context);
-    final profiles = profilesProvider.profiles;
     return ListView.separated(
-      itemCount: profiles.length,
+      itemCount: profilesProvider.profiles.length,
       itemBuilder: (context, index) {
         return ListTile(
-          title: Text(profiles[index].name),
-          subtitle: Text(profiles[index].degreeName),
+          title: Text(profilesProvider.profiles[index].name),
+          subtitle: Text(profilesProvider.profiles[index].degreeName),
         );
       },
       separatorBuilder: (BuildContext context, int index) {
