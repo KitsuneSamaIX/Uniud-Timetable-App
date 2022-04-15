@@ -72,7 +72,6 @@ class _ProfileTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Slidable(
       key: ValueKey(profile),
-
       endActionPane: ActionPane(
         extentRatio: 0.25,
         motion: const ScrollMotion(),
