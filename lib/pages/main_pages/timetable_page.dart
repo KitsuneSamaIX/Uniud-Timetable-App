@@ -38,16 +38,44 @@ class _TimetablePageState extends State<TimetablePage> {
             itemBuilder: (context, index) {
               final selectedDayLessons = profilesProvider.allLessonsOf(
                   date: timetableManagerProvider.lessonsPageIndexToDate(index));
-              return ListView.separated(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                itemCount: selectedDayLessons.length,
-                itemBuilder: (context, index) {
-                  return _LessonCard(lesson: selectedDayLessons[index]);
-                },
-                separatorBuilder: (BuildContext context, int index) {
-                  return const SizedBox(height: 8);
-                },
-              );
+              if (selectedDayLessons.isNotEmpty) {
+                return ListView.separated(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  itemCount: selectedDayLessons.length,
+                  itemBuilder: (context, index) {
+                    return _LessonCard(lesson: selectedDayLessons[index]);
+                  },
+                  separatorBuilder: (BuildContext context, int index) {
+                    return const SizedBox(height: 8);
+                  },
+                );
+              } else {
+                return DefaultTextStyle(
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Theme.of(context).colorScheme.secondary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                  child: Align(
+                    alignment: const Alignment(0, -0.6),
+                    child: SizedBox(
+                      width: 250,
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.inbox_rounded, size: 60, color: Theme.of(context).colorScheme.secondary,),
+                          const SizedBox(height: 16,),
+                          profilesProvider.profiles.isNotEmpty
+                              ? const Text('Nothing to show here.\nEnjoy your free time!', textAlign: TextAlign.center,)
+                              : const Text("Hello fellow student!\nI see that you "
+                              "haven't created any profiles yet, you can create one "
+                              "from the 'Profiles' page.", textAlign: TextAlign.center),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }
             },
           ),
         ),
