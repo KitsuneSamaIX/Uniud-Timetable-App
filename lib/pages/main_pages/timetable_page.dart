@@ -63,7 +63,9 @@ class _TimetablePageState extends State<TimetablePage> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.inbox_rounded, size: 60, color: Theme.of(context).colorScheme.secondary,),
+                          profilesProvider.profiles.isNotEmpty
+                              ? Icon(Icons.tag_faces_outlined, size: 60, color: Theme.of(context).colorScheme.secondary,)
+                              : Icon(Icons.inbox_rounded, size: 60, color: Theme.of(context).colorScheme.secondary,),
                           const SizedBox(height: 16,),
                           profilesProvider.profiles.isNotEmpty
                               ? const Text('Nothing to show here.\nEnjoy your free time!', textAlign: TextAlign.center,)
