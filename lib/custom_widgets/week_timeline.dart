@@ -42,7 +42,7 @@ class _WeekTimelineState extends State<WeekTimeline> with AutomaticKeepAliveClie
           _WeekTimelineHeader(week: _Week.fromPreviousMondayOf(
               date: widget.controller.selectedDate)),
           SizedBox(
-            height: 70,
+            height: 66,
             child: PageView.builder(
               controller: _pageController,
               scrollDirection: Axis.horizontal,
@@ -147,7 +147,7 @@ class _WeekTimelineHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
+      padding: const EdgeInsets.fromLTRB(10, 0, 10, 12),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -158,7 +158,8 @@ class _WeekTimelineHeader extends StatelessWidget {
           const SizedBox(width: 10,),
           Text(
             '${week.weekFirstDate.day} - ${week.weekDates.last.day} '
-                '${DateFormat.MMMM().format(week.weekDates.last)}',
+                '${DateFormat.MMMM().format(week.weekDates.last)} '
+                '${DateFormat.y().format(week.weekDates.last)}',
             style: TextStyle(
               color: Theme.of(context).colorScheme.tertiary,
               fontSize: 18,
@@ -196,15 +197,18 @@ class _DayTile extends StatelessWidget {
             ),
             child: DefaultTextStyle(
               style: TextStyle(
-                color: isSelected ? Theme.of(context).colorScheme.onPrimaryContainer
-                    : Theme.of(context).colorScheme.secondary,
+                color: _areDatesEqual(date, DateTime.now())
+                    ? Theme.of(context).colorScheme.primary
+                    : (isSelected
+                    ? Theme.of(context).colorScheme.onPrimaryContainer
+                    : Theme.of(context).colorScheme.secondary),
                 fontWeight: FontWeight.bold,
               ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(DateFormat.E().format(date)),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 4),
                   FittedBox(
                     fit: BoxFit.contain,
                     child: Text('${date.day}', style: const TextStyle(fontSize: 27),),

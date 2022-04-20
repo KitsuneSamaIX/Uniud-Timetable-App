@@ -103,8 +103,8 @@ class _LessonCard extends StatelessWidget {
 
     return GestureDetector(
       onTap: () =>
-          Navigator.of(context).push(_HeroDialogRoute<void>(
-                  (context) => _LessonInfoDialog(lesson: lesson))),
+          Navigator.of(context).push(_HeroPopupRoute<void>(
+                  (context) => _LessonInfoPopup(lesson: lesson))),
       child: Hero(
         tag: lesson,
         child: Card(
@@ -170,10 +170,10 @@ class _LessonCard extends StatelessWidget {
   }
 }
 
-class _HeroDialogRoute<T> extends PageRoute<T> {
+class _HeroPopupRoute<T> extends PageRoute<T> {
   final WidgetBuilder builder;
 
-  _HeroDialogRoute(this.builder) : super();
+  _HeroPopupRoute(this.builder) : super();
 
   @override
   bool get opaque => false;
@@ -200,10 +200,10 @@ class _HeroDialogRoute<T> extends PageRoute<T> {
   }
 }
 
-class _LessonInfoDialog extends StatelessWidget {
+class _LessonInfoPopup extends StatelessWidget {
   final CourseLesson lesson;
 
-  const _LessonInfoDialog({
+  const _LessonInfoPopup({
     Key? key,
     required this.lesson,
   }) : super(key: key);

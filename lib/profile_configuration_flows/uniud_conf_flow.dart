@@ -377,9 +377,11 @@ class _ProfileNamePageState extends State<ProfileNamePage> {
                     if (value == null || value.isEmpty) {
                       return 'Please set a profile name.';
                     } else if (value.length > 50) {
-                      return 'Profile name must have less than 50 characters.';
+                      return 'Name must have less than 50 characters.';
+                    } else if (value.startsWith(' ')) {
+                      return "Name can't start with a whitespace.";
                     } else if (value.endsWith(' ')) {
-                      return 'Whitespaces at the end of the name are not allowed.';
+                      return "Name can't end with a whitespace.";
                     } else if (profileNames.contains(value)) {
                       return 'There is already another profile with this name.';
                     } else {
