@@ -102,6 +102,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       bottomNavigationBar: NavigationBar(
+        animationDuration: const Duration(milliseconds: 300),
         labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
         selectedIndex: _selectedPageIndex,
         onDestinationSelected: (index) => setState(() {

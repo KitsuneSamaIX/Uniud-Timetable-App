@@ -16,9 +16,9 @@ class WeekTimeline extends StatefulWidget {
 }
 
 class _WeekTimelineState extends State<WeekTimeline> with AutomaticKeepAliveClientMixin {
-  static const int _viewableWeeksRadius = 1000;
-  static const int _totalViewableWeeks = (_viewableWeeksRadius * 2) + 1;
-  final int _currentWeekIndex = (_totalViewableWeeks / 2).floor();
+  late final int _viewableWeeksRadius = widget.controller.viewableWeeksRadius;
+  late final int _totalViewableWeeks = (_viewableWeeksRadius * 2) + 1;
+  late final int _currentWeekIndex = (_totalViewableWeeks / 2).floor();
 
   final DateTime _currentDate = _normalizeDate(DateTime.now());
 
@@ -201,7 +201,7 @@ class _DayTile extends StatelessWidget {
                     ? Theme.of(context).colorScheme.primary
                     : (isSelected
                     ? Theme.of(context).colorScheme.onPrimaryContainer
-                    : Theme.of(context).colorScheme.secondary),
+                    : Theme.of(context).colorScheme.onSecondaryContainer),
                 fontWeight: FontWeight.bold,
               ),
               child: Column(
@@ -223,12 +223,15 @@ class _DayTile extends StatelessWidget {
 }
 
 class WeekTimelineController extends ChangeNotifier {
+  final int viewableWeeksRadius;
   final DateTime initialDate;
   late DateTime _selectedDate;
 
   WeekTimelineController({
+    this.viewableWeeksRadius = 1000,
     required this.initialDate,
-  }) : _selectedDate = _normalizeDate(initialDate);
+  }) : _selectedDate = _normalizeDate(initialDate),
+        assert (viewableWeeksRadius >= 0);
 
   // PUBLIC API
 

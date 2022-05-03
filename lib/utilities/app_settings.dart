@@ -4,8 +4,8 @@ import 'package:uniud_timetable_app/pages/settings_page.dart';
 
 class AppSettings extends ChangeNotifier {
   // Theme (with defaults)
-  ThemeMode _themeMode = ThemeMode.dark;
-  AppKeyColor _appKeyColor = AppKeyColor.teal;
+  ThemeMode _themeMode = ThemeMode.system;
+  AppKeyColor _appKeyColor = AppKeyColor.green;
   bool _darkIsTrueBlack = false;
 
   ThemeMode get themeMode => _themeMode;
