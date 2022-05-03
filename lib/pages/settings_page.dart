@@ -45,15 +45,15 @@ class _SettingsPageState extends State<SettingsPage> {
                     context: context,
                     applicationName: 'Uniud Timetable',
                     applicationIcon: Container(
-                      height: 100,
-                      width: 100,
+                      height: 80,
+                      width: 80,
                       decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
                       clipBehavior: Clip.antiAlias,
                       child: const Image(image: AssetImage('assets/app_icon_512.png'),),
                     ),
                     applicationVersion: 'Version 1.0',
                     children: [
-                      const SizedBox(height: 10,),
+                      const SizedBox(height: 16,),
                       const Text('Author: Mattia Fedrigo')
                     ]
                   ),

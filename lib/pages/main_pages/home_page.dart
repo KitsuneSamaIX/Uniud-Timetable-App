@@ -87,7 +87,18 @@ class _HomePageState extends State<HomePage> {
               child: Visibility(
                 visible: _selectedPageIndex == 0,
                 child: IconButton(
-                  onPressed: () => _timetableManager.gotoDate(DateTime.now()),
+                  onPressed: () {
+                    showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: _timetableManager.firstPickableDate,
+                      lastDate: _timetableManager.lastPickableDate,
+                    ).then((date) {
+                      if (date != null) {
+                        _timetableManager.gotoDate(date);
+                      }
+                    });
+                  },
                   color: Theme.of(context).colorScheme.secondary,
                   iconSize: 32,
                   icon: const Icon(Icons.today),
@@ -105,10 +116,18 @@ class _HomePageState extends State<HomePage> {
         animationDuration: const Duration(milliseconds: 300),
         labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
         selectedIndex: _selectedPageIndex,
-        onDestinationSelected: (index) => setState(() {
-          _selectedPageIndex = index;
-          _pageController.jumpToPage(index);
-        }),
+        onDestinationSelected: (index) {
+          if (_selectedPageIndex == index) {
+            if (_selectedPageIndex == 0) {
+              _timetableManager.gotoDate(DateTime.now());
+            }
+          } else {
+            setState(() {
+              _selectedPageIndex = index;
+              _pageController.jumpToPage(index);
+            });
+          }
+        },
         destinations: const [
           NavigationDestination(
             icon: Icon(Icons.apps),

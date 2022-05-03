@@ -61,6 +61,12 @@ class TimetableManager {
     ).whenComplete(() => lessonsPageControllerIsAnimatingToPage = false);
   }
 
+  DateTime get firstPickableDate =>
+      _currentDate.subtract(Duration(days: _viewableDatesRadius));
+
+  DateTime get lastPickableDate =>
+      _currentDate.add(Duration(days: _viewableDatesRadius));
+
   // CONVERSIONS
 
   int dateToLessonsPageIndex(DateTime date) {
