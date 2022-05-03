@@ -1,11 +1,11 @@
 {
-    "name": "uniud_timetable_app",
-    "short_name": "uniud_timetable_app",
+    "name": "Uniud Timetable",
+    "short_name": "Uniud Timetable",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "description": "Uniud Timetable App.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
