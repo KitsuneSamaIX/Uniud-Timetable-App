@@ -44,6 +44,7 @@ class _WeekTimelineState extends State<WeekTimeline> with AutomaticKeepAliveClie
           SizedBox(
             height: 66,
             child: PageView.builder(
+              itemCount: _totalViewableWeeks,
               controller: _pageController,
               scrollDirection: Axis.horizontal,
               onPageChanged: (index) {

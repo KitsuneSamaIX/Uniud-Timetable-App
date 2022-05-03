@@ -28,6 +28,7 @@ class _TimetablePageState extends State<TimetablePage> {
         ),
         Expanded(
           child: PageView.builder(
+            itemCount: timetableManagerProvider.totalViewableDates,
             controller: timetableManagerProvider.lessonsPageController,
             onPageChanged: (index) {
               if (!timetableManagerProvider.lessonsPageControllerIsAnimatingToPage) {

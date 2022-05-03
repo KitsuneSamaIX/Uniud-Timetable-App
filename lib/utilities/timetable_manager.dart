@@ -2,10 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:uniud_timetable_app/custom_widgets/week_timeline.dart';
 
 class TimetableManager {
-  static const int _viewableWeeksRadius = 1000;
-  static const int _viewableDatesRadius = _viewableWeeksRadius * 7;
-  static const int _totalViewableDates = (_viewableDatesRadius * 2) + 1;
-  final int _currentDateIndex = (_totalViewableDates / 2).floor();
+  final int _viewableWeeksRadius = 1000;
+  // Convert the number of weeks in the number of dates
+  late final int _viewableDatesRadius = _viewableWeeksRadius * 7;
+  // Add the two radiuses to the central week (7 dates) to compute the total
+  late final int totalViewableDates = (_viewableDatesRadius * 2) + 7;
+  // Compute the current date index, note that we are inside a week (which starts
+  // with monday), so we are not always at the center of the week hence we need
+  // to offset the obtained index.
+  late final int _currentDateIndex = (totalViewableDates / 2).floor() - 3 + (_currentDate.weekday - 1);
 
   final DateTime _currentDate = _normalizeDate(DateTime.now());
 
@@ -44,7 +49,7 @@ class TimetableManager {
   }
 
   /// Convenience method that calls [PageController.animateToPage] with
-  /// predefined animation parameters.
+  /// predefined animation parameters and automatically sets [lessonsPageControllerIsAnimatingToPage].
   ///
   /// This method returns the result of the call to [PageController.animateToPage].
   Future<void> lessonsPageControllerAnimateToPage(int page) {
