@@ -41,7 +41,22 @@ class _SettingsPageState extends State<SettingsPage> {
                 _SettingsElement(
                   leading: const Icon(Icons.info_outline_rounded),
                   title: const Text('About'),
-                  onTap: () => showAboutDialog(context: context),
+                  onTap: () => showAboutDialog(
+                    context: context,
+                    applicationName: 'Uniud Timetable',
+                    applicationIcon: Container(
+                      height: 100,
+                      width: 100,
+                      decoration: BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                      clipBehavior: Clip.antiAlias,
+                      child: const Image(image: AssetImage('assets/app_icon_512.png'),),
+                    ),
+                    applicationVersion: 'Version 1.0',
+                    children: [
+                      const SizedBox(height: 10,),
+                      const Text('Author: Mattia Fedrigo')
+                    ]
+                  ),
                 ),
               ],
             ),
