@@ -421,7 +421,12 @@ class _ProfileNamePageState extends State<ProfileNamePage> {
   Future<void> _loadCourses() async {
     widget.profileBuilder.courses = {};
     for (final courseDescriptor in widget.profileBuilder.courseDescriptors!) {
-      widget.profileBuilder.courses!.add(await UniudTimetableAPI.getCourse(courseDescriptor));
+      try {
+        widget.profileBuilder.courses!.add(await UniudTimetableAPI.getCourse(courseDescriptor));
+      } catch(e) {
+        print("An error occurred while adding the course '${courseDescriptor.name}' "
+            "to the profile. Error: $e");
+      }
     }
     final profilesProvider = Provider.of<Profiles>(context, listen: false);
     profilesProvider.addProfile(widget.profileBuilder.build());
