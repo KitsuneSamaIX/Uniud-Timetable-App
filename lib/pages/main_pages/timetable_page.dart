@@ -5,14 +5,9 @@ import 'package:uniud_timetable_app/models/profile_models.dart';
 import 'package:uniud_timetable_app/utilities/profiles.dart';
 import 'package:uniud_timetable_app/utilities/timetable_manager.dart';
 
-class TimetablePage extends StatefulWidget {
+class TimetablePage extends StatelessWidget {
   const TimetablePage({Key? key}) : super(key: key);
 
-  @override
-  State<TimetablePage> createState() => _TimetablePageState();
-}
-
-class _TimetablePageState extends State<TimetablePage> {
   @override
   Widget build(BuildContext context) {
     final timetableManagerProvider = Provider.of<TimetableManager>(context);
