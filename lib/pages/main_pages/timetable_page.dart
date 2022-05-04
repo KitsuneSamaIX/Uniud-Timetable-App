@@ -239,6 +239,7 @@ class _LessonInfoPopup extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     _LessonInfoGroup(
+                      title: const Text('Lesson'),
                       children: [
                         _LessonInfoElement(
                           leading: const Icon(Icons.access_time_rounded),
@@ -257,6 +258,60 @@ class _LessonInfoPopup extends StatelessWidget {
                           title: Text(
                             '${lesson.room}, ${lesson.building}',
                             maxLines: 3,
+                          ),
+                        ),
+                      ],
+                    ),
+                    _LessonInfoGroup(
+                      title: const Text('Course'),
+                      children: [
+                        _LessonInfoElement(
+                          leading: const Icon(Icons.drive_file_rename_outline_rounded),
+                          title: Text(
+                            lesson.course!.name,
+                            maxLines: 3,
+                          ),
+                        ),
+                        _LessonInfoElement(
+                          leading: Text(
+                            'CFU',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.tertiary,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          title: Text(
+                            lesson.course!.credits,
+                          ),
+                        ),
+                      ],
+                    ),
+                    _LessonInfoGroup(
+                      title: const Text('Professor'),
+                      children: [
+                        _LessonInfoElement(
+                          leading: Text(
+                            'Prof.',
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.tertiary,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          title: Text(
+                            '${lesson.course!.professor.name} '
+                                '${lesson.course!.professor.surname}',
+                          ),
+                        ),
+                        _LessonInfoElement(
+                          leading: const Icon(Icons.mail_outline_rounded),
+                          title: SelectableText(
+                            '${lesson.course!.professor.email}',
+                          ),
+                        ),
+                        _LessonInfoElement(
+                          leading: const Icon(Icons.phone),
+                          title: SelectableText(
+                            '${lesson.course!.professor.phone}',
                           ),
                         ),
                       ],
@@ -308,7 +363,7 @@ class _LessonInfoGroup extends StatelessWidget {
     ));
 
     return Padding(
-      padding: padding != null ? padding! : const EdgeInsets.symmetric(vertical: 8),
+      padding: padding != null ? padding! : const EdgeInsets.only(top: 8, bottom: 24),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
