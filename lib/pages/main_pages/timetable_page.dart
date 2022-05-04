@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:uniud_timetable_app/common/common.dart';
 import 'package:uniud_timetable_app/custom_widgets/week_timeline.dart';
 import 'package:uniud_timetable_app/models/profile_models.dart';
 import 'package:uniud_timetable_app/utilities/profiles.dart';
@@ -181,13 +182,13 @@ class _HeroPopupRoute<T> extends PageRoute<T> {
   bool get barrierDismissible => true;
 
   @override
-  String? get barrierLabel => 'Lesson Info Barrier';
+  String? get barrierLabel => 'Popup Barrier';
 
   @override
   bool get maintainState => true;
 
   @override
-  Duration get transitionDuration => const Duration(milliseconds: 300);
+  Duration get transitionDuration => const Duration(milliseconds: 250);
 
   @override
   Widget buildPage(BuildContext context, Animation<double> animation,
@@ -222,63 +223,135 @@ class _LessonInfoPopup extends StatelessWidget {
             height: 480,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              child: IconTheme(
-                data: IconThemeData(
-                  size: 18,
-                  color: Theme.of(context).colorScheme.tertiary,
-                ),
-                child: DefaultTextStyle(
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSecondaryContainer,
-                    fontSize: 14.5,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      lesson.course!.name,
+                      style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 3,
+                    ),
+                    const SizedBox(height: 16),
+                    _LessonInfoGroup(
                       children: [
-                        Text(
-                          lesson.course!.name,
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.primary,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          maxLines: 3,
-                        ),
-                        const SizedBox(height: 30),
-                        Row(
-                          children: [
-                            const Icon(Icons.access_time_rounded),
-                            const SizedBox(width: 8),
-                            Text('$startTimeString '),
-                            Icon(Icons.arrow_forward_rounded,
-                              color: Theme.of(context).colorScheme.onSecondaryContainer,
-                            ),
-                            Text(' $endTimeString'),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        Row(
-                          children: [
-                            const Icon(Icons.place_outlined),
-                            const SizedBox(width: 8),
-                            Expanded(
-                              child: Text(
-                                '${lesson.room}, ${lesson.building}',
-                                maxLines: 3,
+                        _LessonInfoElement(
+                          leading: const Icon(Icons.access_time_rounded),
+                          title: Row(
+                            children: [
+                              Text('$startTimeString '),
+                              Icon(Icons.arrow_forward_rounded,
+                                color: Theme.of(context).colorScheme.onSecondaryContainer,
                               ),
-                            ),
-                          ],
+                              Text(' $endTimeString'),
+                            ],
+                          ),
+                        ),
+                        _LessonInfoElement(
+                          leading: const Icon(Icons.place_outlined),
+                          title: Text(
+                            '${lesson.room}, ${lesson.building}',
+                            maxLines: 3,
+                          ),
                         ),
                       ],
                     ),
-                  ),
+                  ],
                 ),
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _LessonInfoGroup extends StatelessWidget {
+  final Widget? title;
+  final List<Widget> children;
+  final EdgeInsetsGeometry? padding;
+
+  const _LessonInfoGroup({
+    Key? key,
+    this.title,
+    required this.children,
+    this.padding
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // Prepare column elements
+    final elements = <Widget>[];
+    if (title != null) {
+      elements.add(
+        DefaultTextStyle(
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.onSecondaryContainer,
+            fontSize: 16,
+            overflow: TextOverflow.ellipsis,
+            fontWeight: FontWeight.bold,
+          ),
+          child: title!,
+        ),
+      );
+      elements.add(const SizedBox(height: 14,));
+    }
+    elements.addAll(separateWidgets(
+      widgets: children,
+      separator: const SizedBox(height: 14,),
+    ));
+
+    return Padding(
+      padding: padding != null ? padding! : const EdgeInsets.symmetric(vertical: 8),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: elements,
+      ),
+    );
+  }
+}
+
+class _LessonInfoElement extends StatelessWidget {
+  final Widget? leading;
+  final Widget title;
+
+  const _LessonInfoElement({
+    Key? key,
+    this.leading,
+    required this.title,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // Prepare row elements
+    final elements = <Widget>[];
+    if (leading != null) {
+      elements.add(leading!);
+      elements.add(const SizedBox(width: 8));
+    }
+    elements.add(Flexible(child: title));
+
+    return IconTheme(
+      data: IconThemeData(
+        size: 18,
+        color: Theme.of(context).colorScheme.tertiary,
+      ),
+      child: DefaultTextStyle(
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.onSecondaryContainer,
+          fontSize: 14.5,
+          overflow: TextOverflow.ellipsis,
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: elements,
         ),
       ),
     );
