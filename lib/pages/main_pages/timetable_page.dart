@@ -188,7 +188,7 @@ class _HeroPopupRoute<T> extends PageRoute<T> {
   bool get maintainState => true;
 
   @override
-  Duration get transitionDuration => const Duration(milliseconds: 250);
+  Duration get transitionDuration => const Duration(milliseconds: 220);
 
   @override
   Widget buildPage(BuildContext context, Animation<double> animation,
