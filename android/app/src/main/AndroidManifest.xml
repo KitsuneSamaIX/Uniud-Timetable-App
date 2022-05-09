@@ -1,7 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mattiafedrigo.uniud_timetable_app">
-   <application
-        android:label="uniud_timetable_app"
+    <uses-permission android:name="android.permission.INTERNET" />
+    <application
+        android:label="Uniud Timetable"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
