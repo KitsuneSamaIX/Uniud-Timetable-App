@@ -50,10 +50,12 @@ class MaterialAppWithTheme extends StatelessWidget {
     return MaterialApp(
       title: 'Uniud Timetable',
       theme: ThemeData(
+        useMaterial3: true,
         brightness: Brightness.light,
         colorSchemeSeed: appSettingsProvider.appKeyColor.toColor(),
       ),
       darkTheme: appSettingsProvider.darkIsTrueBlack ? ThemeData(
+        useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(
             brightness: Brightness.dark,
             seedColor: appSettingsProvider.appKeyColor.toColor(),
@@ -62,6 +64,7 @@ class MaterialAppWithTheme extends StatelessWidget {
         ),
         scaffoldBackgroundColor: Colors.black,
       ) : ThemeData(
+        useMaterial3: true,
         brightness: Brightness.dark,
         colorSchemeSeed: appSettingsProvider.appKeyColor.toColor(),
       ),
