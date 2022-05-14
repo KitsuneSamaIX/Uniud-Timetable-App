@@ -48,7 +48,7 @@ class MaterialAppWithTheme extends StatelessWidget {
   Widget build(BuildContext context) {
     final appSettingsProvider = Provider.of<AppSettings>(context);
     return MaterialApp(
-      title: 'UNIUD Timetable App',
+      title: 'Uniud Timetable',
       theme: ThemeData(
         brightness: Brightness.light,
         colorSchemeSeed: appSettingsProvider.appKeyColor.toColor(),
