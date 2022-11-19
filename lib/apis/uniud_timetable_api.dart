@@ -6,11 +6,11 @@ import 'package:xml/xml.dart';
 
 class UniudTimetableAPI {
   // API Endpoints
-  static final _degreesIndexEndpoint =  kIsWeb ? Uri.parse('https://uniud-timetable-proxy.herokuapp.com/PortaleStudenti/api_profilo_aa_scuola_tipo_cdl_pd.php')
+  static final _degreesIndexEndpoint =  kIsWeb ? Uri.parse('https://uniud-timetable-proxy.onrender.com/PortaleStudenti/api_profilo_aa_scuola_tipo_cdl_pd.php')
       : Uri.parse('https://planner.uniud.it/PortaleStudenti/api_profilo_aa_scuola_tipo_cdl_pd.php');
-  static final _degreeCoursesEndpoint = kIsWeb ? Uri.parse('https://uniud-timetable-proxy.herokuapp.com/PortaleStudenti/api_profilo_lista_insegnamenti.php')
+  static final _degreeCoursesEndpoint = kIsWeb ? Uri.parse('https://uniud-timetable-proxy.onrender.com/PortaleStudenti/api_profilo_lista_insegnamenti.php')
       : Uri.parse('https://planner.uniud.it/PortaleStudenti/api_profilo_lista_insegnamenti.php');
-  static final _courseInfoEndpoint = kIsWeb ? Uri.parse('https://uniud-timetable-proxy.herokuapp.com/PortaleStudenti//App/zipped.php')
+  static final _courseInfoEndpoint = kIsWeb ? Uri.parse('https://uniud-timetable-proxy.onrender.com/PortaleStudenti//App/zipped.php')
       : Uri.parse('https://planner.uniud.it/PortaleStudenti//App/zipped.php');
 
   UniudTimetableAPI();
